@@ -3,19 +3,74 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, MessageCircle, Shield, CheckCircle, BatteryFull } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getProduct, incrementViews, conditionLabel, conditionColor, getWhatsAppLink, statusLabel, statusColor, type Product } from "@/lib/products";
+import { conditionLabel, conditionColor, getWhatsAppLink, statusLabel, statusColor, type Product } from "@/lib/products";
+import { supabase } from "@/lib/supabase";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | undefined>();
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
-      incrementViews(id);
-      setProduct(getProduct(id));
+      loadProduct(id);
     }
   }, [id]);
+
+  const loadProduct = async (productId: string) => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        const product: Product = {
+          id: data.id,
+          name: data.name,
+          brand: data.brand,
+          price: data.price,
+          originalPrice: data.original_price,
+          description: data.description,
+          condition: data.condition,
+          status: data.status || "disponivel",
+          battery: data.battery_percentage,
+          generalState: data.general_condition,
+          slug: data.slug || data.id,
+          images: data.images || [],
+          specs: data.specs || {},
+          featured: data.featured,
+          promotion: data.promotion,
+          views: data.views,
+          createdAt: data.created_at,
+        };
+        setProduct(product);
+
+        // Increment views
+        await supabase
+          .from("products")
+          .update({ views: (data.views || 0) + 1 })
+          .eq("id", productId);
+      }
+    } catch (err) {
+      console.error("Error loading product:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <p className="text-lg text-muted-foreground">Carregando produto...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (

@@ -1,18 +1,27 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Smartphone, Menu, X, LogOut } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/authContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { getSettings } from "@/lib/products";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [s, setS] = useState(getSettings());
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user, isAdmin } = useAuth();
+
   const isActive = (path: string) => location.pathname === path;
+
+  useEffect(() => {
+    const h = () => setS(getSettings());
+    window.addEventListener("settings-updated", h);
+    return () => window.removeEventListener("settings-updated", h);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -25,23 +34,51 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-          <Smartphone className="h-6 w-6 text-accent" />
-          <span>Master Cell</span>
+          <Smartphone className="h-6 w-6 text-primary" />
+          <span>{s.footerName}</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-4">
-          <Link to="/" className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/") ? "text-accent" : "text-muted-foreground"}`}>Início</Link>
-          <Link to="/produtos" className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/produtos") ? "text-accent" : "text-muted-foreground"}`}>Produtos</Link>
+        <nav className="hidden md:flex items-center gap-6">
+          <Link
+            to="/"
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              isActive("/") ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            Início
+          </Link>
+
+          <Link
+            to="/produtos"
+            className={`text-sm font-medium transition-colors hover:text-primary ${
+              isActive("/produtos") ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            Produtos
+          </Link>
 
           {user && isAdmin && (
-            <Link to="/admin" className={`text-sm font-medium transition-colors hover:text-accent ${isActive("/admin") ? "text-accent" : "text-muted-foreground"}`}>
+            <Link
+              to="/admin"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive("/admin") ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
               Painel
             </Link>
           )}
 
-          <Button asChild size="sm" className="bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground">
-            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">
+          <Button
+            asChild
+            size="sm"
+            className="bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground"
+          >
+            <a
+              href={`https://wa.me/${s.whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               WhatsApp
             </a>
           </Button>
@@ -63,24 +100,61 @@ const Header = () => {
           )}
         </nav>
 
-        {/* Mobile toggle */}
-        <button className="md:hidden" onClick={() => setOpen(!open)}>
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden"
+          onClick={() => setOpen(!open)}
+          aria-label="Menu"
+        >
+          {open ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </button>
       </div>
 
       {/* Mobile nav */}
       {open && (
         <nav className="md:hidden border-t bg-card px-4 pb-4 pt-2 space-y-2">
-          <Link to="/" onClick={() => setOpen(false)} className="block py-2 text-sm font-medium">Início</Link>
-          <Link to="/produtos" onClick={() => setOpen(false)} className="block py-2 text-sm font-medium">Produtos</Link>
+          <Link
+            to="/"
+            onClick={() => setOpen(false)}
+            className="block py-2 text-sm font-medium"
+          >
+            Início
+          </Link>
+
+          <Link
+            to="/produtos"
+            onClick={() => setOpen(false)}
+            className="block py-2 text-sm font-medium"
+          >
+            Produtos
+          </Link>
 
           {user && isAdmin && (
-            <Link to="/admin" onClick={() => setOpen(false)} className="block py-2 text-sm font-medium">Painel Admin</Link>
+            <Link
+              to="/admin"
+              onClick={() => setOpen(false)}
+              className="block py-2 text-sm font-medium"
+            >
+              Painel Admin
+            </Link>
           )}
 
-          <Button asChild size="sm" className="w-full bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground">
-            <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <Button
+            asChild
+            size="sm"
+            className="w-full bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground"
+          >
+            <a
+              href={`https://wa.me/${s.whatsappNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp
+            </a>
           </Button>
 
           {user ? (
@@ -95,7 +169,9 @@ const Header = () => {
             </Button>
           ) : (
             <Button asChild size="sm" className="w-full" variant="default">
-              <Link to="/admin/login" onClick={() => setOpen(false)}>Entrar</Link>
+              <Link to="/admin/login" onClick={() => setOpen(false)}>
+                Entrar
+              </Link>
             </Button>
           )}
         </nav>

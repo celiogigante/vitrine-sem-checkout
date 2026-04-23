@@ -24,6 +24,9 @@ const Products = () => {
     else if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
     else if (sort === "views") list.sort((a, b) => b.views - a.views);
 
+    // Vendidos sempre por último
+    list.sort((a, b) => (a.status === "vendido" ? 1 : 0) - (b.status === "vendido" ? 1 : 0));
+
     return list;
   }, [products, search, brand, condition, sort]);
 

@@ -33,9 +33,8 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-          <img src="https://cdn.builder.io/api/v1/image/assets%2F0f424a25e73f4d24902cebe46635e6a9%2F6cb6ff55961f44a3a18bc3e351c34e90?format=webp&width=100&height=100" alt="Logo" className="h-8 w-auto" />
-          <span>{s.footerName}</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2F0f424a25e73f4d24902cebe46635e6a9%2F6cb6ff55961f44a3a18bc3e351c34e90?format=webp&width=100&height=100" alt="Logo" className="h-10 w-auto" />
         </Link>
 
         {/* Desktop nav */}

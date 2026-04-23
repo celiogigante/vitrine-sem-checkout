@@ -41,8 +41,8 @@ const Header = () => {
         <nav className="hidden md:flex items-center gap-6">
           <Link
             to="/"
-            className={`text-sm font-medium transition-colors hover:text-primary ${
-              isActive("/") ? "text-primary" : "text-muted-foreground"
+            className={`text-sm font-medium transition-colors hover:text-yellow-300 ${
+              isActive("/") ? "text-yellow-400" : "text-yellow-200"
             }`}
           >
             Início
@@ -50,8 +50,8 @@ const Header = () => {
 
           <Link
             to="/produtos"
-            className={`text-sm font-medium transition-colors hover:text-primary ${
-              isActive("/produtos") ? "text-primary" : "text-muted-foreground"
+            className={`text-sm font-medium transition-colors hover:text-yellow-300 ${
+              isActive("/produtos") ? "text-yellow-400" : "text-yellow-200"
             }`}
           >
             Produtos
@@ -60,8 +60,8 @@ const Header = () => {
           {user && isAdmin && (
             <Link
               to="/admin"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive("/admin") ? "text-primary" : "text-muted-foreground"
+              className={`text-sm font-medium transition-colors hover:text-yellow-300 ${
+                isActive("/admin") ? "text-yellow-400" : "text-yellow-200"
               }`}
             >
               Painel
@@ -106,20 +106,20 @@ const Header = () => {
           aria-label="Menu"
         >
           {open ? (
-            <X className="h-6 w-6" />
+            <X className="h-6 w-6 text-yellow-400" />
           ) : (
-            <Menu className="h-6 w-6" />
+            <Menu className="h-6 w-6 text-yellow-400" />
           )}
         </button>
       </div>
 
       {/* Mobile nav */}
       {open && (
-        <nav className="md:hidden border-t bg-card px-4 pb-4 pt-2 space-y-2">
+        <nav className="md:hidden border-t bg-black px-4 pb-4 pt-2 space-y-2">
           <Link
             to="/"
             onClick={() => setOpen(false)}
-            className="block py-2 text-sm font-medium"
+            className="block py-2 text-sm font-medium text-yellow-400"
           >
             Início
           </Link>
@@ -127,7 +127,7 @@ const Header = () => {
           <Link
             to="/produtos"
             onClick={() => setOpen(false)}
-            className="block py-2 text-sm font-medium"
+            className="block py-2 text-sm font-medium text-yellow-400"
           >
             Produtos
           </Link>
@@ -136,7 +136,7 @@ const Header = () => {
             <Link
               to="/admin"
               onClick={() => setOpen(false)}
-              className="block py-2 text-sm font-medium"
+              className="block py-2 text-sm font-medium text-yellow-400"
             >
               Painel Admin
             </Link>

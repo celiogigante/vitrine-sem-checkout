@@ -39,7 +39,7 @@ const Home = () => {
               <Button asChild size="lg" className="bg-accent text-accent-foreground hover:opacity-90">
                 <Link to="/produtos">Ver catálogo <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+              <Button asChild size="lg" variant="outline" className="bg-primary-foreground border-primary-foreground text-primary hover:bg-primary-foreground/90 hover:text-primary">
                 <a href={`https://wa.me/${s.whatsappNumber}`} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="mr-2 h-4 w-4" /> {s.heroCtaText}
                 </a>

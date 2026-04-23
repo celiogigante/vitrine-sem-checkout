@@ -32,7 +32,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-black backdrop-blur-lg">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-24 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <img src="https://cdn.builder.io/api/v1/image/assets%2F0f424a25e73f4d24902cebe46635e6a9%2Fc4302bee56ed4913afb33a88f71c2891?format=webp&width=300&height=300" alt="Logo" className="h-20 w-auto" />
         </Link>

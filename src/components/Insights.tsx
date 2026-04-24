@@ -6,14 +6,12 @@ import { Loader2, TrendingUp, ShoppingCart, Users, Eye, Package, DollarSign } fr
 interface InsightsData {
   totalProducts: number;
   totalViews: number;
-  totalClicks: number;
   featuredProducts: number;
   promotionProducts: number;
   totalCustomers: number;
   totalOrders: number;
   totalRevenue: number;
   topProducts: Product[];
-  topProductsByClicks: Array<{ product_id: string; product_name: string; total_clicks: number }>;
   conditionDistribution: Array<{ name: string; value: number }>;
   brandDistribution: Array<{ name: string; value: number }>;
   orderStatus: Array<{ status: string; count: number }>;
@@ -47,22 +45,6 @@ export function Insights() {
         .from("orders")
         .select("*");
 
-      // Load product clicks
-      let clickList: Array<{ product_id: string }> = [];
-      try {
-        const { data: clicks, error: clicksError } = await supabase
-          .from("product_clicks")
-          .select("product_id");
-
-        if (clicksError) {
-          console.warn("Tabela product_clicks não encontrada ou erro ao carregar:", clicksError.message);
-        } else {
-          clickList = (clicks || []) as Array<{ product_id: string }>;
-        }
-      } catch (err) {
-        console.warn("Erro ao carregar cliques:", err);
-      }
-
       const productList = (products || []) as Product[];
       const customerList = (customers || []) as Customer[];
       const orderList = (orders || []) as Order[];
@@ -70,7 +52,6 @@ export function Insights() {
       // Calculate metrics
       const totalProducts = productList.length;
       const totalViews = productList.reduce((sum, p) => sum + (p.views || 0), 0);
-      const totalClicks = clickList.length;
       const featuredProducts = productList.filter((p) => p.featured).length;
       const promotionProducts = productList.filter((p) => p.promotion).length;
       const totalCustomers = customerList.length;
@@ -84,27 +65,6 @@ export function Insights() {
       // Top products by views
       const topProducts = productList
         .sort((a, b) => (b.views || 0) - (a.views || 0))
-        .slice(0, 5);
-
-      // Top products by clicks
-      const clickCountMap: Record<string, { name: string; count: number }> = {};
-      clickList.forEach((click) => {
-        const productId = click.product_id;
-        const product = productList.find((p) => p.id === productId);
-        if (product) {
-          if (!clickCountMap[productId]) {
-            clickCountMap[productId] = { name: product.name, count: 0 };
-          }
-          clickCountMap[productId].count++;
-        }
-      });
-      const topProductsByClicks = Object.entries(clickCountMap)
-        .map(([productId, data]) => ({
-          product_id: productId,
-          product_name: data.name,
-          total_clicks: data.count,
-        }))
-        .sort((a, b) => b.total_clicks - a.total_clicks)
         .slice(0, 5);
 
       // Condition distribution
@@ -142,14 +102,12 @@ export function Insights() {
       setData({
         totalProducts,
         totalViews,
-        totalClicks,
         featuredProducts,
         promotionProducts,
         totalCustomers,
         totalOrders,
         totalRevenue,
         topProducts,
-        topProductsByClicks,
         conditionDistribution,
         brandDistribution,
         orderStatus,
@@ -206,16 +164,6 @@ export function Insights() {
               <p className="text-2xl font-bold mt-1">{data.totalViews.toLocaleString("pt-BR")}</p>
             </div>
             <Eye className="h-8 w-8 text-purple-500 opacity-20" />
-          </div>
-        </div>
-
-        <div className="rounded-lg border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Total de Cliques</p>
-              <p className="text-2xl font-bold mt-1">{data.totalClicks.toLocaleString("pt-BR")}</p>
-            </div>
-            <Eye className="h-8 w-8 text-cyan-500 opacity-20" />
           </div>
         </div>
 
@@ -299,26 +247,6 @@ export function Insights() {
                 <span className="font-bold">{product.views || 0}</span>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Top Products by Clicks */}
-        <div className="rounded-lg border bg-card p-4">
-          <h3 className="font-semibold mb-4">Top 5 Produtos Mais Clicados</h3>
-          <div className="space-y-3">
-            {data.topProductsByClicks.length > 0 ? (
-              data.topProductsByClicks.map((item, index) => (
-                <div key={item.product_id} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground font-medium">#{index + 1}</span>
-                    <span className="truncate">{item.product_name}</span>
-                  </div>
-                  <span className="font-bold">{item.total_clicks}</span>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground">Nenhum clique registrado ainda</p>
-            )}
           </div>
         </div>
 

@@ -97,7 +97,7 @@ const Home = () => {
                 </Link>
               </Button>
 
-              <Button asChild size="lg" className="border-2 border-yellow-400 bg-transparent text-yellow-300 hover:bg-yellow-400/10">
+              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
                 <a
                   href={`https://wa.me/${s.whatsappNumber}`}
                   target="_blank"

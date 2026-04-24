@@ -39,23 +39,13 @@ const Header = () => {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link
-            to="/"
-            className={`text-sm font-medium transition-colors hover:text-yellow-300 ${
-              isActive("/") ? "text-yellow-400" : "text-yellow-200"
-            }`}
-          >
-            Início
-          </Link>
+          <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+            <Link to="/">Início</Link>
+          </Button>
 
-          <Link
-            to="/produtos"
-            className={`text-sm font-medium transition-colors hover:text-yellow-300 ${
-              isActive("/produtos") ? "text-yellow-400" : "text-yellow-200"
-            }`}
-          >
-            Produtos
-          </Link>
+          <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+            <Link to="/produtos">Produtos</Link>
+          </Button>
 
           {user && isAdmin && (
             <Link

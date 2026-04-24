@@ -6,7 +6,6 @@ import { Loader2, TrendingUp, ShoppingCart, Users, Eye, Package, DollarSign } fr
 interface InsightsData {
   totalProducts: number;
   totalViews: number;
-  totalClicks: number;
   featuredProducts: number;
   promotionProducts: number;
   totalCustomers: number;
@@ -64,7 +63,6 @@ export function Insights() {
       // Calculate metrics
       const totalProducts = productList.length;
       const totalViews = productList.reduce((sum, p) => sum + (p.views || 0), 0);
-      const totalClicks = clickList.length;
       const featuredProducts = productList.filter((p) => p.featured).length;
       const promotionProducts = productList.filter((p) => p.promotion).length;
       const totalCustomers = customerList.length;
@@ -136,7 +134,6 @@ export function Insights() {
       setData({
         totalProducts,
         totalViews,
-        totalClicks,
         featuredProducts,
         promotionProducts,
         totalCustomers,
@@ -200,16 +197,6 @@ export function Insights() {
               <p className="text-2xl font-bold mt-1">{data.totalViews.toLocaleString("pt-BR")}</p>
             </div>
             <Eye className="h-8 w-8 text-purple-500 opacity-20" />
-          </div>
-        </div>
-
-        <div className="rounded-lg border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Total de Cliques</p>
-              <p className="text-2xl font-bold mt-1">{data.totalClicks.toLocaleString("pt-BR")}</p>
-            </div>
-            <Eye className="h-8 w-8 text-cyan-500 opacity-20" />
           </div>
         </div>
 

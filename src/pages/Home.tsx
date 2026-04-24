@@ -98,7 +98,7 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden text-white bg-black pt-6" style={{ minHeight: "480px" }}>
+      <section className="relative overflow-hidden text-white bg-black pt-6" style={{ minHeight: "576px" }}>
         <div className="container mx-auto px-4 py-0 relative h-full">
           <div className="grid grid-cols-1 md:grid-cols-10 gap-8 h-full items-center">
             {/* Left side - Logo/Image (30%) */}
@@ -117,7 +117,7 @@ const Home = () => {
                   {heroConfig?.carousel_title || "Destaques"}
                 </h2>
               </div>
-              <div className="w-full h-80 md:h-96 bg-white rounded-lg overflow-hidden shadow-2xl">
+              <div className="w-full h-96 md:h-[461px] bg-white rounded-lg overflow-hidden shadow-2xl">
                 <HeroCarousel />
               </div>
             </div>

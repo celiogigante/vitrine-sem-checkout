@@ -16,14 +16,14 @@ const ProductCard = ({ product }: { product: Product }) => {
 
   return (
     <div
-      className={`group rounded-xl border bg-card overflow-hidden transition-shadow hover:shadow-lg ${
+      className={`group rounded-xl border bg-card overflow-hidden transition-shadow hover:shadow-lg flex flex-col h-full ${
         sold ? "opacity-60" : ""
       }`}
       style={{ boxShadow: "var(--card-shadow)" }}
     >
       <Link
         to={`/produto/${product.id}`}
-        className="block relative aspect-video overflow-hidden bg-secondary"
+        className="block relative aspect-video overflow-hidden bg-secondary flex-shrink-0"
       >
         <img
           src={product.images[0]}
@@ -53,26 +53,28 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </Link>
 
-      <div className="p-4 space-y-3">
-        <div>
-          <p className="text-xs text-muted-foreground">{product.brand}</p>
-          <h3 className="font-semibold text-sm leading-tight line-clamp-2">
-            {product.name}
-          </h3>
-        </div>
+      <div className="p-4 flex flex-col h-full">
+        <div className="space-y-2 flex-1">
+          <div>
+            <p className="text-xs text-muted-foreground">{product.brand}</p>
+            <h3 className="font-semibold text-sm leading-tight line-clamp-2">
+              {product.name}
+            </h3>
+          </div>
 
-        <div className="flex items-baseline gap-2">
-          {product.originalPrice && (
-            <span className="text-xs text-muted-foreground line-through">
-              R$ {product.originalPrice.toLocaleString("pt-BR")}
+          <div className="flex items-baseline gap-2">
+            {product.originalPrice && (
+              <span className="text-xs text-muted-foreground line-through">
+                R$ {product.originalPrice.toLocaleString("pt-BR")}
+              </span>
+            )}
+            <span className="text-lg font-bold">
+              R$ {product.price.toLocaleString("pt-BR")}
             </span>
-          )}
-          <span className="text-lg font-bold">
-            R$ {product.price.toLocaleString("pt-BR")}
-          </span>
+          </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 mt-3">
           <Button asChild size="sm" variant="outline" className="flex-1 h-9">
             <Link to={`/produto/${product.id}`}>Ver detalhes</Link>
           </Button>

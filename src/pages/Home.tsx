@@ -141,7 +141,7 @@ const Home = () => {
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ gridAutoRows: "1fr" }}>
             {featured.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -158,7 +158,7 @@ const Home = () => {
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ gridAutoRows: "1fr" }}>
             {list.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

@@ -98,7 +98,7 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden text-white bg-black" style={{ minHeight: "480px" }}>
+      <section className="relative overflow-hidden text-white bg-black pt-6" style={{ minHeight: "480px" }}>
         <div className="container mx-auto px-4 py-0 relative h-full">
           <div className="grid grid-cols-1 md:grid-cols-10 gap-8 h-full items-center">
             {/* Left side - Logo/Image (30%) */}

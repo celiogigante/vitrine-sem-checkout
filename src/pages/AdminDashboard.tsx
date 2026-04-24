@@ -10,7 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/ImageUpload";
 import { Insights } from "@/components/Insights";
-import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package } from "lucide-react";
+import AdminMenuManager from "@/components/AdminMenuManager";
+import AdminHeroConfig from "@/components/AdminHeroConfig";
+import AdminProductHighlights from "@/components/AdminProductHighlights";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"];
@@ -37,7 +40,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"insights" | "produtos">("insights");
+  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "hero" | "destaques">("insights");
 
   const [form, setForm] = useState({
     name: "",
@@ -51,6 +54,7 @@ export default function AdminDashboard() {
     specs: {} as Record<string, string>,
     featured: false,
     promotion: false,
+    is_on_request: false,
   });
 
   useEffect(() => {
@@ -99,6 +103,7 @@ export default function AdminDashboard() {
         specs: form.specs,
         featured: form.featured,
         promotion: form.promotion,
+        is_on_request: form.is_on_request,
       };
 
       if (editing) {
@@ -142,6 +147,7 @@ export default function AdminDashboard() {
       specs: product.specs,
       featured: product.featured,
       promotion: product.promotion,
+      is_on_request: (product as any).is_on_request || false,
     });
     setEditing(product.id);
     setShowForm(true);
@@ -179,6 +185,7 @@ export default function AdminDashboard() {
       specs: {},
       featured: false,
       promotion: false,
+      is_on_request: false,
     });
     setEditing(null);
     setShowForm(false);
@@ -225,10 +232,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b">
+      <div className="flex gap-2 mb-6 border-b overflow-x-auto pb-0">
         <button
           onClick={() => setActiveTab("insights")}
-          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
             activeTab === "insights"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -239,7 +246,7 @@ export default function AdminDashboard() {
         </button>
         <button
           onClick={() => setActiveTab("produtos")}
-          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
             activeTab === "produtos"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -248,12 +255,66 @@ export default function AdminDashboard() {
           <Package className="h-4 w-4" />
           Produtos
         </button>
+        <button
+          onClick={() => setActiveTab("menu")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === "menu"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Menu className="h-4 w-4" />
+          Menu
+        </button>
+        <button
+          onClick={() => setActiveTab("hero")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === "hero"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Image className="h-4 w-4" />
+          Hero
+        </button>
+        <button
+          onClick={() => setActiveTab("destaques")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === "destaques"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Star className="h-4 w-4" />
+          Destaques
+        </button>
       </div>
 
       {/* Insights Tab */}
       {activeTab === "insights" && (
         <div className="mb-8">
           <Insights />
+        </div>
+      )}
+
+      {/* Menu Tab */}
+      {activeTab === "menu" && (
+        <div className="mb-8">
+          <AdminMenuManager />
+        </div>
+      )}
+
+      {/* Hero Tab */}
+      {activeTab === "hero" && (
+        <div className="mb-8">
+          <AdminHeroConfig />
+        </div>
+      )}
+
+      {/* Destaques Tab */}
+      {activeTab === "destaques" && (
+        <div className="mb-8">
+          <AdminProductHighlights />
         </div>
       )}
 
@@ -329,7 +390,7 @@ export default function AdminDashboard() {
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
@@ -345,6 +406,14 @@ export default function AdminDashboard() {
                 onChange={(e) => setForm({ ...form, promotion: e.target.checked })}
               />
               Promoção
+            </label>
+            <label className="flex items-center gap-2 text-sm cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.is_on_request}
+                onChange={(e) => setForm({ ...form, is_on_request: e.target.checked })}
+              />
+              Por Pedido (até 3 dias úteis)
             </label>
           </div>
           <div className="flex gap-2">

@@ -30,7 +30,7 @@ const ProductDetail = () => {
       if (error) throw error;
 
       if (data) {
-        const product: Product = {
+        const product: Product & { is_on_request?: boolean } = {
           id: data.id,
           name: data.name,
           brand: data.brand,
@@ -49,6 +49,7 @@ const ProductDetail = () => {
           promotion: data.promotion,
           views: data.views,
           createdAt: data.created_at,
+          is_on_request: data.is_on_request || false,
         };
         setProduct(product);
 
@@ -131,6 +132,9 @@ const ProductDetail = () => {
               <Badge className={statusColor(product.status)}>{statusLabel(product.status)}</Badge>
               <Badge className={conditionColor(product.condition)}>{conditionLabel(product.condition)}</Badge>
               {product.promotion && <Badge className="bg-destructive text-destructive-foreground">Oferta</Badge>}
+              {(product as any).is_on_request && (
+                <Badge className="bg-orange-500 text-white">Por Pedido</Badge>
+              )}
             </div>
           </div>
 
@@ -142,11 +146,21 @@ const ProductDetail = () => {
           </div>
 
           {!sold ? (
-            <Button asChild size="lg" className="w-full bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground text-base py-6">
-              <a href={getWhatsAppLink(product)} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="mr-2 h-5 w-5" /> Negociar pelo WhatsApp
-              </a>
-            </Button>
+            <>
+              <Button asChild size="lg" className="w-full bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground text-base py-6">
+                <a href={getWhatsAppLink(product)} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="mr-2 h-5 w-5" /> Negociar pelo WhatsApp
+                </a>
+              </Button>
+              {(product as any).is_on_request && (
+                <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
+                  <p className="text-sm font-medium text-orange-900 mb-1">⏱️ Produto Por Pedido</p>
+                  <p className="text-xs text-orange-800">
+                    Este produto é vendido por pedido. O prazo de entrega é de até 3 dias úteis após confirmação do pagamento.
+                  </p>
+                </div>
+              )}
+            </>
           ) : (
             <Button size="lg" disabled className="w-full text-base py-6">Produto vendido</Button>
           )}

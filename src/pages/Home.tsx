@@ -145,35 +145,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Brand filter */}
-      <section className="container mx-auto px-4 pt-12">
-        <div className="flex flex-wrap gap-2 justify-center">
-          <button
-            onClick={() => setBrandFilter("all")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              brandFilter === "all"
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary hover:text-primary"
-            }`}
-          >
-            Todas
-          </button>
-          {brands.map((b) => (
-            <button
-              key={b}
-              onClick={() => setBrandFilter(b)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                brandFilter === b
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary hover:text-primary"
-              }`}
-            >
-              {b}
-            </button>
-          ))}
-        </div>
-      </section>
-
       {/* Featured */}
       <section className="container mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold mb-8 text-white">Em destaque</h2>

@@ -41,7 +41,7 @@ const Header = () => {
         .from("menu_items")
         .select("*")
         .eq("is_visible", true)
-        .isNull("parent_id")
+        .is("parent_id", null)
         .order("order_index");
 
       if (error) throw error;

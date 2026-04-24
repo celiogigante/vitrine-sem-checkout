@@ -83,7 +83,7 @@ const Home = () => {
         />
         <div className="container mx-auto px-4 py-20 md:py-28 relative flex justify-center items-center min-h-[500px] md:min-h-[600px]">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets%2F2ab7f0f046f142c08bab1f7e136ba5b7%2F86a61f6db026437c9e9d87911ca6240e?format=webp&width=800&height=1200"
+            src="https://cdn.builder.io/api/v1/image/assets%2F2ab7f0f046f142c08bab1f7e136ba5b7%2F7bdd4f69137248a0949c7ef544dcf127?format=webp&width=800&height=1200"
             alt="Master Cell Logo"
             className="h-auto w-full max-w-md md:max-w-2xl"
           />

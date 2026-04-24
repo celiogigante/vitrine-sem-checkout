@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { ImageUpload } from "@/components/ImageUpload";
-import { Pencil, Trash2, Plus, LogOut, Loader2 } from "lucide-react";
+import { Insights } from "@/components/Insights";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"];
@@ -36,6 +37,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<"insights" | "produtos">("insights");
 
   const [form, setForm] = useState({
     name: "",
@@ -205,22 +207,60 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
-            onClick={() => {
-              resetForm();
-              setShowForm(true);
-            }}
-            size="sm"
-          >
-            <Plus className="mr-1 h-4 w-4" /> Novo produto
-          </Button>
+          {activeTab === "produtos" && (
+            <Button
+              onClick={() => {
+                resetForm();
+                setShowForm(true);
+              }}
+              size="sm"
+            >
+              <Plus className="mr-1 h-4 w-4" /> Novo produto
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={handleLogout}>
             <LogOut className="mr-1 h-4 w-4" /> Sair
           </Button>
         </div>
       </div>
 
-      {showForm && (
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6 border-b">
+        <button
+          onClick={() => setActiveTab("insights")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            activeTab === "insights"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <BarChart3 className="h-4 w-4" />
+          Insights
+        </button>
+        <button
+          onClick={() => setActiveTab("produtos")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors ${
+            activeTab === "produtos"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Package className="h-4 w-4" />
+          Produtos
+        </button>
+      </div>
+
+      {/* Insights Tab */}
+      {activeTab === "insights" && (
+        <div className="mb-8">
+          <Insights />
+        </div>
+      )}
+
+      {/* Products Tab */}
+      {activeTab === "produtos" && (
+        <>
+          {showForm && (
         <div className="mb-8 rounded-xl border bg-card p-6 space-y-4">
           <h2 className="font-semibold text-lg">
             {editing ? "Editar produto" : "Novo produto"}
@@ -398,6 +438,8 @@ export default function AdminDashboard() {
           </table>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

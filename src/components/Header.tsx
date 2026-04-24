@@ -34,7 +34,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b bg-black backdrop-blur-lg">
       <div className="container mx-auto flex h-24 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src="https://cdn.builder.io/api/v1/image/assets%2F0f424a25e73f4d24902cebe46635e6a9%2Fc4302bee56ed4913afb33a88f71c2891?format=webp&width=300&height=300" alt="Logo" className="h-20 w-auto" />
+          <img src="https://cdn.builder.io/api/v1/image/assets%2F2ab7f0f046f142c08bab1f7e136ba5b7%2F954eec5b35ac443eb63ae8a7ca82cabf?format=webp&width=800&height=1200" alt="Master Cell Logo" className="h-20 w-auto" />
         </Link>
 
         {/* Desktop nav */}

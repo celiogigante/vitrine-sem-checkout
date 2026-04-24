@@ -59,7 +59,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b backdrop-blur-lg" style={{ backgroundColor: '#FFF9E6' }}>
+    <header className="sticky top-0 z-50 backdrop-blur-lg" style={{ backgroundColor: '#000000', borderBottom: '2px solid #FFF9E6' }}>
       <div className="container mx-auto flex h-24 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <img
@@ -76,14 +76,14 @@ const Header = () => {
               key={item.id}
               asChild
               size="sm"
-              className="border border-amber-700 bg-transparent text-amber-700 hover:bg-amber-700/10"
+              className="border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10"
             >
               <Link to={item.href}>{item.label}</Link>
             </Button>
           ))}
 
           {user && isAdmin && (
-            <Button asChild size="sm" className="border border-amber-700 bg-transparent text-amber-700 hover:bg-amber-700/10">
+            <Button asChild size="sm" className="border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10">
               <Link to="/admin">Painel</Link>
             </Button>
           )}
@@ -92,7 +92,7 @@ const Header = () => {
             <Button
               size="sm"
               onClick={handleLogout}
-              className="border border-amber-700 bg-transparent text-amber-700 hover:bg-amber-700/10 flex items-center gap-2"
+              className="border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10 flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline text-xs">Sair</span>
@@ -107,22 +107,22 @@ const Header = () => {
           aria-label="Menu"
         >
           {open ? (
-            <X className="h-6 w-6 text-amber-900" />
+            <X className="h-6 w-6 text-white" />
           ) : (
-            <Menu className="h-6 w-6 text-amber-900" />
+            <Menu className="h-6 w-6 text-white" />
           )}
         </button>
       </div>
 
       {/* Mobile nav */}
       {open && (
-        <nav className="md:hidden border-t px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: '#FFF9E6' }}>
+        <nav className="md:hidden border-t px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: '#000000', borderTopColor: '#FFF9E6' }}>
           {menuItems.map((item) => (
             <Button
               key={item.id}
               asChild
               size="sm"
-              className="w-full border border-amber-700 bg-transparent text-amber-700 hover:bg-amber-700/10"
+              className="w-full border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10"
             >
               <Link to={item.href} onClick={() => setOpen(false)}>
                 {item.label}
@@ -131,7 +131,7 @@ const Header = () => {
           ))}
 
           {user && isAdmin && (
-            <Button asChild size="sm" className="w-full border border-amber-700 bg-transparent text-amber-700 hover:bg-amber-700/10">
+            <Button asChild size="sm" className="w-full border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10">
               <Link to="/admin" onClick={() => setOpen(false)}>
                 Painel Admin
               </Link>
@@ -142,7 +142,7 @@ const Header = () => {
             <Button
               onClick={handleLogout}
               size="sm"
-              className="w-full border border-amber-700 bg-transparent text-amber-700 hover:bg-amber-700/10 flex items-center gap-2"
+              className="w-full border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10 flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
               Sair

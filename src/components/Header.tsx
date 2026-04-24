@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Smartphone, Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/authContext";
@@ -31,42 +31,26 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-lg">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
-          <Smartphone className="h-6 w-6 text-primary" />
-          <span>{s.footerName}</span>
+    <header className="sticky top-0 z-50 border-b bg-black backdrop-blur-lg">
+      <div className="container mx-auto flex h-24 items-center justify-between px-4">
+        <Link to="/" className="flex items-center gap-2">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2F0f424a25e73f4d24902cebe46635e6a9%2Fc4302bee56ed4913afb33a88f71c2891?format=webp&width=300&height=300" alt="Logo" className="h-20 w-auto" />
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link
-            to="/"
-            className={`text-sm font-medium transition-colors hover:text-primary ${
-              isActive("/") ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            Início
-          </Link>
+          <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+            <Link to="/">Início</Link>
+          </Button>
 
-          <Link
-            to="/produtos"
-            className={`text-sm font-medium transition-colors hover:text-primary ${
-              isActive("/produtos") ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            Produtos
-          </Link>
+          <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+            <Link to="/produtos">Produtos</Link>
+          </Button>
 
           {user && isAdmin && (
-            <Link
-              to="/admin"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                isActive("/admin") ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
-              Painel
-            </Link>
+            <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+              <Link to="/admin">Painel</Link>
+            </Button>
           )}
 
           <Button
@@ -85,16 +69,15 @@ const Header = () => {
 
           {user ? (
             <Button
-              variant="outline"
               size="sm"
               onClick={handleLogout}
-              className="flex items-center gap-2"
+              className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10 flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline text-xs">Sair</span>
             </Button>
           ) : (
-            <Button asChild size="sm" variant="default">
+            <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
               <Link to="/admin/login">Entrar</Link>
             </Button>
           )}
@@ -107,40 +90,34 @@ const Header = () => {
           aria-label="Menu"
         >
           {open ? (
-            <X className="h-6 w-6" />
+            <X className="h-6 w-6 text-yellow-400" />
           ) : (
-            <Menu className="h-6 w-6" />
+            <Menu className="h-6 w-6 text-yellow-400" />
           )}
         </button>
       </div>
 
       {/* Mobile nav */}
       {open && (
-        <nav className="md:hidden border-t bg-card px-4 pb-4 pt-2 space-y-2">
-          <Link
-            to="/"
-            onClick={() => setOpen(false)}
-            className="block py-2 text-sm font-medium"
-          >
-            Início
-          </Link>
+        <nav className="md:hidden border-t bg-black px-4 pb-4 pt-2 space-y-2">
+          <Button asChild size="sm" className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+            <Link to="/" onClick={() => setOpen(false)}>
+              Início
+            </Link>
+          </Button>
 
-          <Link
-            to="/produtos"
-            onClick={() => setOpen(false)}
-            className="block py-2 text-sm font-medium"
-          >
-            Produtos
-          </Link>
+          <Button asChild size="sm" className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+            <Link to="/produtos" onClick={() => setOpen(false)}>
+              Produtos
+            </Link>
+          </Button>
 
           {user && isAdmin && (
-            <Link
-              to="/admin"
-              onClick={() => setOpen(false)}
-              className="block py-2 text-sm font-medium"
-            >
-              Painel Admin
-            </Link>
+            <Button asChild size="sm" className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
+              <Link to="/admin" onClick={() => setOpen(false)}>
+                Painel Admin
+              </Link>
+            </Button>
           )}
 
           <Button
@@ -160,15 +137,14 @@ const Header = () => {
           {user ? (
             <Button
               onClick={handleLogout}
-              variant="outline"
               size="sm"
-              className="w-full flex items-center gap-2"
+              className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10 flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
               Sair
             </Button>
           ) : (
-            <Button asChild size="sm" className="w-full" variant="default">
+            <Button asChild size="sm" className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
               <Link to="/admin/login" onClick={() => setOpen(false)}>
                 Entrar
               </Link>

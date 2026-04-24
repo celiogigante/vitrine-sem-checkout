@@ -75,7 +75,7 @@ const Home = () => {
       {/* Hero */}
       <section className="relative overflow-hidden bg-primary text-primary-foreground">
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-5"
           style={{
             backgroundImage:
               "radial-gradient(circle at 20% 50%, hsl(var(--accent)) 0%, transparent 50%)"
@@ -83,21 +83,21 @@ const Home = () => {
         />
         <div className="container mx-auto px-4 py-20 md:py-28 relative grid md:grid-cols-2 gap-10 items-center">
           <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl font-extrabold">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-yellow-300">
               {s.heroTitle}
             </h1>
-            <p className="text-lg opacity-80 max-w-lg">
+            <p className="text-lg opacity-80 max-w-lg text-yellow-100">
               {s.heroSubtitle}
             </p>
 
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="border-2 border-yellow-400 bg-transparent text-yellow-300 hover:bg-yellow-400/10">
                 <Link to="/produtos">
                   Ver catálogo <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
 
-              <Button asChild size="lg" variant="outline">
+              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
                 <a
                   href={`https://wa.me/${s.whatsappNumber}`}
                   target="_blank"
@@ -121,11 +121,11 @@ const Home = () => {
       {/* Brand filter */}
       <section className="container mx-auto px-4 pt-12">
         <div className="flex flex-wrap gap-2 justify-center">
-          <button onClick={() => setBrandFilter("all")}>
+          <button onClick={() => setBrandFilter("all")} className="px-4 py-2 rounded-full text-sm font-medium transition-colors hover:text-primary">
             Todas
           </button>
           {BRANDS.map((b) => (
-            <button key={b} onClick={() => setBrandFilter(b)}>
+            <button key={b} onClick={() => setBrandFilter(b)} className="px-4 py-2 rounded-full text-sm font-medium transition-colors hover:text-primary">
               {b}
             </button>
           ))}
@@ -141,7 +141,7 @@ const Home = () => {
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ gridAutoRows: "1fr" }}>
             {featured.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -158,7 +158,7 @@ const Home = () => {
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ gridAutoRows: "1fr" }}>
             {list.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

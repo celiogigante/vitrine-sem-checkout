@@ -73,7 +73,7 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden text-white" style={{ backgroundColor: '#3B6FD8' }}>
+      <section className="relative overflow-hidden text-white" style={{ backgroundColor: '#003ED2' }}>
         <div
           className="absolute inset-0 opacity-5"
           style={{
@@ -81,11 +81,11 @@ const Home = () => {
               "radial-gradient(circle at 20% 50%, #ffffff 0%, transparent 50%)"
           }}
         />
-        <div className="container mx-auto px-4 py-20 md:py-28 relative flex justify-center items-center min-h-[500px] md:min-h-[600px]">
+        <div className="container mx-auto px-4 py-20 md:py-28 relative min-h-[500px] md:min-h-[600px]">
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2F2ab7f0f046f142c08bab1f7e136ba5b7%2F7bdd4f69137248a0949c7ef544dcf127?format=webp&width=800&height=1200"
             alt="Master Cell Logo"
-            className="h-auto w-full max-w-md md:max-w-2xl"
+            className="h-auto w-full max-w-xs md:max-w-sm"
           />
         </div>
       </section>

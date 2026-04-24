@@ -13,7 +13,8 @@ import { Insights } from "@/components/Insights";
 import AdminMenuManager from "@/components/AdminMenuManager";
 import AdminHeroConfig from "@/components/AdminHeroConfig";
 import AdminProductHighlights from "@/components/AdminProductHighlights";
-import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star } from "lucide-react";
+import AdminBrandsManager from "@/components/AdminBrandsManager";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"];
@@ -40,7 +41,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "hero" | "destaques">("insights");
+  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "marcas" | "hero" | "destaques">("insights");
 
   const [form, setForm] = useState({
     name: "",
@@ -286,6 +287,17 @@ export default function AdminDashboard() {
           Menu
         </button>
         <button
+          onClick={() => setActiveTab("marcas")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === "marcas"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Tag className="h-4 w-4" />
+          Marcas
+        </button>
+        <button
           onClick={() => setActiveTab("hero")}
           className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
             activeTab === "hero"
@@ -320,6 +332,13 @@ export default function AdminDashboard() {
       {activeTab === "menu" && (
         <div className="mb-8">
           <AdminMenuManager />
+        </div>
+      )}
+
+      {/* Marcas Tab */}
+      {activeTab === "marcas" && (
+        <div className="mb-8">
+          <AdminBrandsManager />
         </div>
       )}
 

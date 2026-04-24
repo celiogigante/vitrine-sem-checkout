@@ -34,6 +34,11 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b backdrop-blur-lg" style={{ backgroundColor: '#003ED4' }}>
       <div className="container mx-auto flex h-24 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets%2F745a6a1096d546999a2f21f0471c7da5%2F79ed162aed044a158c0b43eac2527532?format=webp&width=800&height=1200"
+            alt="Master Cell Logo"
+            className="h-12 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

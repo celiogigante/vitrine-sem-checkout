@@ -46,6 +46,12 @@ const ProductCard = ({ product }: { product: Product }) => {
               Oferta
             </Badge>
           )}
+
+          {(product as any).is_on_request && (
+            <Badge className="bg-orange-500 text-white">
+              Por Pedido
+            </Badge>
+          )}
         </div>
 
         <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-card/80 backdrop-blur-sm px-2 py-1 text-xs text-muted-foreground">

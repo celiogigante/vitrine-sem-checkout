@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
+import HeroCarousel from "@/components/HeroCarousel";
 import { useEffect, useMemo, useState } from "react";
 import { supabase, type Product } from "@/lib/supabase";
 import { getSettings, BRANDS } from "@/lib/products";
@@ -27,10 +28,18 @@ const ICONS: Record<string, any> = {
   Zap
 };
 
+interface HeroConfig {
+  hero_name: string;
+  hero_image_url: string | null;
+  hero_logo_url: string | null;
+  carousel_title: string;
+}
+
 const Home = () => {
   const [s, setS] = useState(getSettings());
   const [brandFilter, setBrandFilter] = useState<string>("all");
   const [products, setProducts] = useState<Product[]>([]);
+  const [heroConfig, setHeroConfig] = useState<HeroConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -40,20 +49,36 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    loadProducts();
+    loadData();
   }, []);
 
-  const loadProducts = async () => {
+  const loadData = async () => {
     try {
-      const { data, error } = await supabase
+      setIsLoading(true);
+
+      // Load products
+      const { data: productsData, error: productsError } = await supabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      setProducts((data || []) as Product[]);
+      if (productsError) throw productsError;
+      setProducts((productsData || []) as Product[]);
+
+      // Load hero config
+      const { data: configData, error: configError } = await supabase
+        .from("hero_config")
+        .select("*")
+        .limit(1)
+        .single();
+
+      if (configError && configError.code !== "PGRST116") throw configError;
+
+      if (configData) {
+        setHeroConfig(configData as HeroConfig);
+      }
     } catch (err) {
-      console.error("Erro ao carregar produtos:", err);
+      console.error("Erro ao carregar dados:", err);
     } finally {
       setIsLoading(false);
     }
@@ -73,20 +98,30 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden text-white" style={{ backgroundColor: '#003ED4' }}>
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 50%, #ffffff 0%, transparent 50%)"
-          }}
-        />
-        <div className="container mx-auto px-4 py-0 relative">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2F745a6a1096d546999a2f21f0471c7da5%2F8414122a15f7441ca0b39a94efae5912?format=webp&width=800&height=1200"
-            alt="Master Cell Logo"
-            className="h-auto w-full max-w-xs md:max-w-sm"
-          />
+      <section className="relative overflow-hidden text-white bg-black" style={{ minHeight: "480px" }}>
+        <div className="container mx-auto px-4 py-0 relative h-full">
+          <div className="grid grid-cols-1 md:grid-cols-10 gap-8 h-full items-center">
+            {/* Left side - Logo/Image (30%) */}
+            <div className="flex items-center justify-center py-12 md:py-0 md:col-span-3">
+              <img
+                src={heroConfig?.hero_logo_url || heroConfig?.hero_image_url || "https://uuwpzxpsvltqhrtadirk.supabase.co/storage/v1/object/public/products/webp%20logo.webp"}
+                alt={heroConfig?.hero_name || "Logo"}
+                className="h-auto w-full max-w-2xl rounded-lg shadow-xl"
+              />
+            </div>
+
+            {/* Right side - Carousel (70%) */}
+            <div className="flex flex-col items-center justify-center py-12 md:py-0 md:col-span-7">
+              <div className="w-full mb-6">
+                <h2 className="text-2xl font-bold text-center md:text-left">
+                  {heroConfig?.carousel_title || "Destaques"}
+                </h2>
+              </div>
+              <div className="w-full h-80 md:h-96 bg-white rounded-lg overflow-hidden shadow-2xl">
+                <HeroCarousel />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

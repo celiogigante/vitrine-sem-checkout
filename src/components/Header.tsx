@@ -111,22 +111,6 @@ const Header = () => {
             </Button>
           ))}
 
-          {/* Brand filters - desktop */}
-          <div className="hidden lg:flex items-center gap-1">
-            <span className="text-xs text-white/60 px-2">|</span>
-            {["Apple", "Samsung", "Xiaomi"].map((brand) => (
-              <Button
-                key={brand}
-                asChild
-                size="sm"
-                variant="ghost"
-                className="text-xs text-yellow-300 hover:text-yellow-200 h-auto py-1 px-2"
-              >
-                <Link to={`/produtos?brand=${brand}`}>{brand}</Link>
-              </Button>
-            ))}
-          </div>
-
           {user && isAdmin && (
             <Button asChild size="sm" className="border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10">
               <Link to="/admin">Painel</Link>
@@ -193,24 +177,6 @@ const Header = () => {
               </Link>
             </Button>
           ))}
-
-          {/* Brand filters - mobile */}
-          <div className="border-t border-yellow-300/30 pt-2 mt-2 space-y-1">
-            <p className="text-xs text-white/60 px-2 font-medium">Marcas populares</p>
-            {["Apple", "Samsung", "Xiaomi", "LG", "Motorola"].map((brand) => (
-              <Button
-                key={brand}
-                asChild
-                size="sm"
-                variant="ghost"
-                className="w-full text-left justify-start text-xs text-yellow-300 hover:text-yellow-200 h-auto py-1"
-              >
-                <Link to={`/produtos?brand=${brand}`} onClick={() => setOpen(false)}>
-                  {brand}
-                </Link>
-              </Button>
-            ))}
-          </div>
 
           {user && isAdmin && (
             <Button asChild size="sm" className="w-full border border-yellow-300 bg-transparent text-yellow-300 hover:bg-yellow-300/10">

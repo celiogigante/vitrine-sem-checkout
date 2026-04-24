@@ -67,11 +67,23 @@ const Home = () => {
       const productList = (productsData || []) as Product[];
       setProducts(productList);
 
-      // Extract unique brands from products
-      const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
-        .filter(Boolean)
-        .sort();
-      setBrands(uniqueBrands);
+      // Load brands from brands table
+      const { data: brandsData, error: brandsError } = await supabase
+        .from("brands")
+        .select("name")
+        .eq("is_visible", true)
+        .order("order_index");
+
+      if (brandsError) {
+        // Fallback: extract from products if brands table doesn't exist yet
+        const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
+          .filter(Boolean)
+          .sort();
+        setBrands(uniqueBrands);
+      } else {
+        const uniqueBrands = (brandsData || []).map(b => b.name).sort();
+        setBrands(uniqueBrands);
+      }
 
       // Load hero config
       const { data: configData, error: configError } = await supabase
@@ -164,7 +176,7 @@ const Home = () => {
 
       {/* Featured */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold mb-8">Em destaque</h2>
+        <h2 className="text-2xl font-bold mb-8 text-white">Em destaque</h2>
 
         {isLoading ? (
           <div className="flex justify-center py-10">
@@ -181,7 +193,7 @@ const Home = () => {
 
       {/* Vitrine */}
       <section className="container mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-bold mb-8">Vitrine</h2>
+        <h2 className="text-2xl font-bold mb-8 text-white">Vitrine</h2>
 
         {isLoading ? (
           <div className="flex justify-center py-10">
@@ -198,10 +210,10 @@ const Home = () => {
 
       {/* WhatsApp CTA */}
       <section className="text-center py-16">
-        <h2 className="text-3xl font-bold">
+        <h2 className="text-3xl font-bold text-white">
           {s.whatsappSectionTitle}
         </h2>
-        <p>{s.whatsappSectionText}</p>
+        <p className="text-white">{s.whatsappSectionText}</p>
 
         <Button asChild size="lg">
           <a href={`https://wa.me/${s.whatsappNumber}`}>

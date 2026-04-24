@@ -13,7 +13,8 @@ import { Insights } from "@/components/Insights";
 import AdminMenuManager from "@/components/AdminMenuManager";
 import AdminHeroConfig from "@/components/AdminHeroConfig";
 import AdminProductHighlights from "@/components/AdminProductHighlights";
-import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star } from "lucide-react";
+import AdminBrandsManager from "@/components/AdminBrandsManager";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"];
@@ -40,7 +41,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "hero" | "destaques">("insights");
+  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "marcas" | "hero" | "destaques">("insights");
 
   const [form, setForm] = useState({
     name: "",
@@ -71,11 +72,23 @@ export default function AdminDashboard() {
       const productList = (data || []) as Product[];
       setProducts(productList);
 
-      // Extract unique brands from products
-      const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
-        .filter(Boolean)
-        .sort();
-      setBrands(uniqueBrands);
+      // Load brands from brands table
+      const { data: brandsData, error: brandsError } = await supabase
+        .from("brands")
+        .select("name")
+        .eq("is_visible", true)
+        .order("order_index");
+
+      if (brandsError) {
+        // Fallback: extract from products if brands table doesn't exist yet
+        const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
+          .filter(Boolean)
+          .sort();
+        setBrands(uniqueBrands);
+      } else {
+        const uniqueBrands = (brandsData || []).map(b => b.name).sort();
+        setBrands(uniqueBrands);
+      }
     } catch (err) {
       console.error("Error loading products:", err);
       toast({
@@ -274,6 +287,17 @@ export default function AdminDashboard() {
           Menu
         </button>
         <button
+          onClick={() => setActiveTab("marcas")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === "marcas"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Tag className="h-4 w-4" />
+          Marcas
+        </button>
+        <button
           onClick={() => setActiveTab("hero")}
           className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
             activeTab === "hero"
@@ -308,6 +332,13 @@ export default function AdminDashboard() {
       {activeTab === "menu" && (
         <div className="mb-8">
           <AdminMenuManager />
+        </div>
+      )}
+
+      {/* Marcas Tab */}
+      {activeTab === "marcas" && (
+        <div className="mb-8">
+          <AdminBrandsManager />
         </div>
       )}
 

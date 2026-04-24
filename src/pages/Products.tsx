@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,11 +10,12 @@ import { supabase, type Product } from "@/lib/supabase";
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"] as const;
 
 const Products = () => {
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [brand, setBrand] = useState("all");
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [brand, setBrand] = useState(searchParams.get("brand") || "all");
   const [condition, setCondition] = useState("all");
   const [sort, setSort] = useState("recent");
 
@@ -32,11 +34,23 @@ const Products = () => {
       const productList = (data || []) as Product[];
       setProducts(productList);
 
-      // Extract unique brands from products
-      const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
-        .filter(Boolean)
-        .sort();
-      setBrands(uniqueBrands);
+      // Load brands from brands table
+      const { data: brandsData, error: brandsError } = await supabase
+        .from("brands")
+        .select("name")
+        .eq("is_visible", true)
+        .order("order_index");
+
+      if (brandsError) {
+        // Fallback: extract from products if brands table doesn't exist yet
+        const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
+          .filter(Boolean)
+          .sort();
+        setBrands(uniqueBrands);
+      } else {
+        const uniqueBrands = (brandsData || []).map(b => b.name).sort();
+        setBrands(uniqueBrands);
+      }
     } catch (err) {
       console.error("Erro ao carregar produtos:", err);
     } finally {

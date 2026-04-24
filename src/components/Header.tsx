@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/authContext";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -16,6 +17,7 @@ interface MenuItem {
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [s, setS] = useState(getSettings());
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const location = useLocation();
@@ -24,6 +26,14 @@ const Header = () => {
   const { user, isAdmin } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/produtos?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  };
 
   useEffect(() => {
     const h = () => setS(getSettings());
@@ -60,8 +70,8 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-lg" style={{ backgroundColor: '#000000', borderBottom: '2px solid #FFF9E6' }}>
-      <div className="container mx-auto flex h-24 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
+      <div className="container mx-auto flex h-24 items-center justify-between px-4 gap-4">
+        <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <img
             src="https://cdn.builder.io/api/v1/image/assets%2F745a6a1096d546999a2f21f0471c7da5%2F79ed162aed044a158c0b43eac2527532?format=webp&width=800&height=1200"
             alt="Master Cell Logo"
@@ -69,8 +79,27 @@ const Header = () => {
           />
         </Link>
 
+        {/* Search bar */}
+        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xs">
+          <div className="relative w-full">
+            <Input
+              type="text"
+              placeholder="Buscar celular..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-4 pr-10 bg-white/10 border-yellow-300/30 text-white placeholder:text-white/50 focus:border-yellow-300 focus:bg-white/20"
+            />
+            <button
+              type="submit"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-300 hover:text-yellow-200"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          </div>
+        </form>
+
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6 flex-shrink-0">
           {menuItems.map((item) => (
             <Button
               key={item.id}

@@ -67,11 +67,23 @@ const Home = () => {
       const productList = (productsData || []) as Product[];
       setProducts(productList);
 
-      // Extract unique brands from products
-      const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
-        .filter(Boolean)
-        .sort();
-      setBrands(uniqueBrands);
+      // Load brands from brands table
+      const { data: brandsData, error: brandsError } = await supabase
+        .from("brands")
+        .select("name")
+        .eq("is_visible", true)
+        .order("order_index");
+
+      if (brandsError) {
+        // Fallback: extract from products if brands table doesn't exist yet
+        const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
+          .filter(Boolean)
+          .sort();
+        setBrands(uniqueBrands);
+      } else {
+        const uniqueBrands = (brandsData || []).map(b => b.name).sort();
+        setBrands(uniqueBrands);
+      }
 
       // Load hero config
       const { data: configData, error: configError } = await supabase

@@ -48,18 +48,24 @@ export function Insights() {
         .select("*");
 
       // Load product clicks
-      const { data: clicks, error: clicksError } = await supabase
-        .from("product_clicks")
-        .select("product_id");
+      let clickList: Array<{ product_id: string }> = [];
+      try {
+        const { data: clicks, error: clicksError } = await supabase
+          .from("product_clicks")
+          .select("product_id");
 
-      if (clicksError) {
-        console.error("Erro ao carregar cliques:", clicksError);
+        if (clicksError) {
+          console.warn("Tabela product_clicks não encontrada ou erro ao carregar:", clicksError.message);
+        } else {
+          clickList = (clicks || []) as Array<{ product_id: string }>;
+        }
+      } catch (err) {
+        console.warn("Erro ao carregar cliques:", err);
       }
 
       const productList = (products || []) as Product[];
       const customerList = (customers || []) as Customer[];
       const orderList = (orders || []) as Order[];
-      const clickList = (clicks || []) as Array<{ product_id: string }>;
 
       // Calculate metrics
       const totalProducts = productList.length;

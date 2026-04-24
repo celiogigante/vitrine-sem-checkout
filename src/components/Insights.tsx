@@ -48,9 +48,13 @@ export function Insights() {
         .select("*");
 
       // Load product clicks
-      const { data: clicks } = await supabase
+      const { data: clicks, error: clicksError } = await supabase
         .from("product_clicks")
         .select("product_id");
+
+      if (clicksError) {
+        console.error("Erro ao carregar cliques:", clicksError);
+      }
 
       const productList = (products || []) as Product[];
       const customerList = (customers || []) as Customer[];

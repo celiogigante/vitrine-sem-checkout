@@ -76,14 +76,14 @@ const Header = () => {
               key={item.id}
               asChild
               size="sm"
-              className="border border-white bg-transparent text-white hover:bg-white/10"
+              className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10"
             >
               <Link to={item.href}>{item.label}</Link>
             </Button>
           ))}
 
           {user && isAdmin && (
-            <Button asChild size="sm" className="border border-white bg-transparent text-white hover:bg-white/10">
+            <Button asChild size="sm" className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
               <Link to="/admin">Painel</Link>
             </Button>
           )}
@@ -92,7 +92,7 @@ const Header = () => {
             <Button
               size="sm"
               onClick={handleLogout}
-              className="border border-white bg-transparent text-white hover:bg-white/10 flex items-center gap-2"
+              className="border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10 flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline text-xs">Sair</span>
@@ -122,7 +122,7 @@ const Header = () => {
               key={item.id}
               asChild
               size="sm"
-              className="w-full border border-white bg-transparent text-white hover:bg-white/10"
+              className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10"
             >
               <Link to={item.href} onClick={() => setOpen(false)}>
                 {item.label}
@@ -131,7 +131,7 @@ const Header = () => {
           ))}
 
           {user && isAdmin && (
-            <Button asChild size="sm" className="w-full border border-white bg-transparent text-white hover:bg-white/10">
+            <Button asChild size="sm" className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10">
               <Link to="/admin" onClick={() => setOpen(false)}>
                 Painel Admin
               </Link>
@@ -142,7 +142,7 @@ const Header = () => {
             <Button
               onClick={handleLogout}
               size="sm"
-              className="w-full border border-white bg-transparent text-white hover:bg-white/10 flex items-center gap-2"
+              className="w-full border border-yellow-400 bg-transparent text-yellow-400 hover:bg-yellow-400/10 flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
               Sair

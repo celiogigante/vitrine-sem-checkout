@@ -31,7 +31,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b backdrop-blur-lg" style={{ backgroundColor: '#003ED4' }}>
+    <header className="sticky top-0 z-50 border-b backdrop-blur-lg" style={{ backgroundColor: '#000000' }}>
       <div className="container mx-auto flex h-24 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
           <img
@@ -103,7 +103,7 @@ const Header = () => {
 
       {/* Mobile nav */}
       {open && (
-        <nav className="md:hidden border-t px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: '#003ED4' }}>
+        <nav className="md:hidden border-t px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: '#000000' }}>
           <Button asChild size="sm" className="w-full border border-white bg-transparent text-white hover:bg-white/10">
             <Link to="/" onClick={() => setOpen(false)}>
               Início

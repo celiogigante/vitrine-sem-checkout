@@ -73,7 +73,7 @@ const Home = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden text-white" style={{ backgroundColor: '#003ED4' }}>
+      <section className="relative overflow-hidden text-white" style={{ backgroundColor: '#000000' }}>
         <div
           className="absolute inset-0 opacity-5"
           style={{
@@ -83,7 +83,7 @@ const Home = () => {
         />
         <div className="container mx-auto px-4 py-0 relative">
           <img
-            src="https://cdn.builder.io/api/v1/image/assets%2F745a6a1096d546999a2f21f0471c7da5%2F8414122a15f7441ca0b39a94efae5912?format=webp&width=800&height=1200"
+            src="https://cdn.builder.io/api/v1/image/assets%2F9376fd889e0a4ec090b74278fed99324%2Fed8eccc7d52b45969bd739894fa6aa65?format=webp&width=800&height=1200"
             alt="Master Cell Logo"
             className="h-auto w-full max-w-xs md:max-w-sm"
           />

@@ -106,7 +106,7 @@ const Home = () => {
               <img
                 src={heroConfig?.hero_logo_url || heroConfig?.hero_image_url || "https://uuwpzxpsvltqhrtadirk.supabase.co/storage/v1/object/public/products/webp%20logo.webp"}
                 alt={heroConfig?.hero_name || "Logo"}
-                className="h-auto w-full max-w-xs rounded-lg shadow-xl"
+                className="h-auto w-full max-w-2xl rounded-lg shadow-xl"
               />
             </div>
 

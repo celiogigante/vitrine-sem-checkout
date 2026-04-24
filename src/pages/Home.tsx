@@ -186,11 +186,12 @@ const Home = () => {
         </h2>
         <p className="text-white">{s.whatsappSectionText}</p>
 
-        <Button asChild size="lg">
-          <a href={`https://wa.me/${s.whatsappNumber}`}>
-            <MessageCircle className="mr-2" />
-            {s.whatsappSectionCta}
-          </a>
+        <Button
+          size="lg"
+          onClick={() => window.open(`https://wa.me/${s.whatsappNumber}`, "_blank")}
+        >
+          <MessageCircle className="mr-2" />
+          {s.whatsappSectionCta}
         </Button>
       </section>
     </div>

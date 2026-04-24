@@ -46,9 +46,11 @@ export default function AdminBrandsManager() {
       if (error) throw error;
       setBrands((data || []) as Brand[]);
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
       console.error("Erro ao carregar marcas:", err);
       toast({
         title: "Erro ao carregar marcas",
+        description: errorMsg,
         variant: "destructive",
       });
     } finally {
@@ -94,9 +96,11 @@ export default function AdminBrandsManager() {
       loadBrands();
       resetForm();
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
       console.error("Erro ao salvar marca:", err);
       toast({
         title: "Erro ao salvar marca",
+        description: errorMsg,
         variant: "destructive",
       });
     } finally {
@@ -127,9 +131,11 @@ export default function AdminBrandsManager() {
       setBrands(brands.filter((b) => b.id !== id));
       toast({ title: "Marca removida" });
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
       console.error("Erro ao deletar marca:", err);
       toast({
         title: "Erro ao deletar marca",
+        description: errorMsg,
         variant: "destructive",
       });
     }

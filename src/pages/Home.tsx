@@ -176,7 +176,7 @@ const Home = () => {
 
       {/* Featured */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold mb-8">Em destaque</h2>
+        <h2 className="text-2xl font-bold mb-8 text-white">Em destaque</h2>
 
         {isLoading ? (
           <div className="flex justify-center py-10">
@@ -193,7 +193,7 @@ const Home = () => {
 
       {/* Vitrine */}
       <section className="container mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-bold mb-8">Vitrine</h2>
+        <h2 className="text-2xl font-bold mb-8 text-white">Vitrine</h2>
 
         {isLoading ? (
           <div className="flex justify-center py-10">
@@ -210,10 +210,10 @@ const Home = () => {
 
       {/* WhatsApp CTA */}
       <section className="text-center py-16">
-        <h2 className="text-3xl font-bold">
+        <h2 className="text-3xl font-bold text-white">
           {s.whatsappSectionTitle}
         </h2>
-        <p>{s.whatsappSectionText}</p>
+        <p className="text-white">{s.whatsappSectionText}</p>
 
         <Button asChild size="lg">
           <a href={`https://wa.me/${s.whatsappNumber}`}>

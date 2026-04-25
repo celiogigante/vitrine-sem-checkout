@@ -138,7 +138,7 @@ const Home = () => {
                   {heroConfig?.carousel_title || "Promoções"}
                 </h2>
               </div>
-              <div className="w-full h-96 md:h-[461px] bg-white rounded-lg overflow-hidden shadow-2xl">
+              <div className="w-full aspect-video md:aspect-[16/9] bg-white rounded-lg overflow-hidden shadow-2xl">
                 <HeroCarousel />
               </div>
             </div>

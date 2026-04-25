@@ -123,7 +123,7 @@ export default function HeroCarousel() {
               <img
                 src={currentProduct.images[0]}
                 alt={currentProduct.name}
-                className="w-full h-full object-cover group-hover:brightness-95 transition-all duration-300"
+                className="w-full h-full object-contain group-hover:brightness-95 transition-all duration-300 bg-gray-100"
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">

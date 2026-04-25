@@ -79,15 +79,15 @@ const Header = () => {
           />
         </Link>
 
-        {/* Search bar */}
-        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xs">
+        {/* Search bar - visible on all sizes */}
+        <form onSubmit={handleSearch} className="flex flex-1 max-w-xs md:max-w-xs">
           <div className="relative w-full">
             <Input
               type="text"
-              placeholder="Buscar celular..."
+              placeholder="Buscar..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-4 pr-10 bg-white/10 border-yellow-300/30 text-white placeholder:text-white/50 focus:border-yellow-300 focus:bg-white/20"
+              className="pl-4 pr-10 bg-white/10 border-yellow-300/30 text-white placeholder:text-white/50 focus:border-yellow-300 focus:bg-white/20 text-sm"
             />
             <button
               type="submit"
@@ -131,7 +131,7 @@ const Header = () => {
 
         {/* Mobile menu button */}
         <button
-          className="md:hidden"
+          className="md:hidden flex-shrink-0"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
@@ -146,25 +146,6 @@ const Header = () => {
       {/* Mobile nav */}
       {open && (
         <nav className="md:hidden border-t px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: '#000000', borderTopColor: '#FFF9E6' }}>
-          {/* Mobile search */}
-          <form onSubmit={handleSearch} className="mb-2">
-            <div className="relative w-full">
-              <Input
-                type="text"
-                placeholder="Buscar celular..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-4 pr-10 bg-white/10 border-yellow-300/30 text-white placeholder:text-white/50 focus:border-yellow-300 focus:bg-white/20 text-sm"
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-yellow-300 hover:text-yellow-200"
-              >
-                <Search className="h-4 w-4" />
-              </button>
-            </div>
-          </form>
-
           {menuItems.map((item) => (
             <Button
               key={item.id}

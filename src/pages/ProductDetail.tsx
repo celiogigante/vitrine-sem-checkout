@@ -61,10 +61,17 @@ const ProductDetail = () => {
         setProduct(product);
 
         // Increment views
-        await supabase
+        const newViews = (data.views || 0) + 1;
+        const { error: updateError } = await supabase
           .from("products")
-          .update({ views: (data.views || 0) + 1 })
+          .update({ views: newViews })
           .eq("id", productId);
+
+        if (updateError) {
+          console.error("Erro ao atualizar views:", updateError);
+        } else {
+          console.log("Views incrementadas para:", newViews);
+        }
 
         // Record product view
         recordProductView(productId);

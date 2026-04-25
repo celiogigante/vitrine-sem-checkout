@@ -22,9 +22,17 @@ interface InsightsData {
 export function Insights() {
   const [data, setData] = useState<InsightsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
   useEffect(() => {
     loadInsights();
+
+    // Auto-refresh a cada 5 segundos
+    const interval = setInterval(() => {
+      loadInsights();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const loadInsights = async () => {
@@ -146,6 +154,8 @@ export function Insights() {
         orderStatus,
         averageProductPrice,
       });
+
+      setLastRefresh(new Date());
     } catch (err) {
       console.error("Error loading insights:", err);
     } finally {
@@ -178,6 +188,20 @@ export function Insights() {
 
   return (
     <div className="space-y-6">
+      {/* Refresh Info */}
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <p>Última atualização: {lastRefresh.toLocaleTimeString("pt-BR")}</p>
+        <button
+          onClick={() => {
+            setIsLoading(true);
+            loadInsights();
+          }}
+          className="text-primary hover:underline cursor-pointer"
+        >
+          ↻ Atualizar agora
+        </button>
+      </div>
+
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-lg border bg-card p-4">

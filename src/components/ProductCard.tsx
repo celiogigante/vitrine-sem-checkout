@@ -32,12 +32,12 @@ const ProductCard = ({ product }: { product: Product }) => {
     >
       <Link
         to={`/produto/${product.id}`}
-        className="block relative aspect-video overflow-hidden bg-secondary flex-shrink-0"
+        className="block relative aspect-[3/4] md:aspect-video overflow-hidden bg-secondary flex-shrink-0"
       >
         <img
           src={product.images[0]}
           alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
         />
 

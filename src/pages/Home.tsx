@@ -42,6 +42,7 @@ const Home = () => {
   const [brands, setBrands] = useState<string[]>([]);
   const [heroConfig, setHeroConfig] = useState<HeroConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [mobileColumns, setMobileColumns] = useState<1 | 2>(2);
 
   useEffect(() => {
     const h = () => setS(getSettings());
@@ -147,14 +148,40 @@ const Home = () => {
 
       {/* Featured */}
       <section className="container mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold mb-8 text-white">Em destaque</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-white">Em destaque</h2>
+
+          {/* Mobile columns toggle - Only visible on mobile */}
+          <div className="md:hidden flex gap-2">
+            <button
+              onClick={() => setMobileColumns(2)}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                mobileColumns === 2
+                  ? "bg-white text-black"
+                  : "bg-gray-700 text-white hover:bg-gray-600"
+              }`}
+            >
+              2 colunas
+            </button>
+            <button
+              onClick={() => setMobileColumns(1)}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                mobileColumns === 1
+                  ? "bg-white text-black"
+                  : "bg-gray-700 text-white hover:bg-gray-600"
+              }`}
+            >
+              1 coluna
+            </button>
+          </div>
+        </div>
 
         {isLoading ? (
           <div className="flex justify-center py-10">
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ gridAutoRows: "1fr" }}>
+          <div className={`grid ${mobileColumns === 1 ? "grid-cols-1" : "grid-cols-2"} md:grid-cols-4 gap-4`} style={{ gridAutoRows: "1fr" }}>
             {featured.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -164,14 +191,40 @@ const Home = () => {
 
       {/* Vitrine */}
       <section className="container mx-auto px-4 pb-16">
-        <h2 className="text-2xl font-bold mb-8 text-white">Vitrine</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-white">Vitrine</h2>
+
+          {/* Mobile columns toggle - Only visible on mobile */}
+          <div className="md:hidden flex gap-2">
+            <button
+              onClick={() => setMobileColumns(2)}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                mobileColumns === 2
+                  ? "bg-white text-black"
+                  : "bg-gray-700 text-white hover:bg-gray-600"
+              }`}
+            >
+              2 colunas
+            </button>
+            <button
+              onClick={() => setMobileColumns(1)}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                mobileColumns === 1
+                  ? "bg-white text-black"
+                  : "bg-gray-700 text-white hover:bg-gray-600"
+              }`}
+            >
+              1 coluna
+            </button>
+          </div>
+        </div>
 
         {isLoading ? (
           <div className="flex justify-center py-10">
             <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{ gridAutoRows: "1fr" }}>
+          <div className={`grid ${mobileColumns === 1 ? "grid-cols-1" : "grid-cols-2"} md:grid-cols-4 gap-4`} style={{ gridAutoRows: "1fr" }}>
             {list.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

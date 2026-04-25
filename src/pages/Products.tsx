@@ -18,6 +18,7 @@ const Products = () => {
   const [brand, setBrand] = useState(searchParams.get("brand") || "all");
   const [condition, setCondition] = useState("all");
   const [sort, setSort] = useState("recent");
+  const [mobileColumns, setMobileColumns] = useState<1 | 2>(2);
 
   useEffect(() => {
     loadProducts();
@@ -81,34 +82,60 @@ const Products = () => {
       <h1 className="text-3xl font-bold mb-8 text-white">Nossos celulares</h1>
 
       {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-3 mb-8">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar celular..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+      <div className="flex flex-col gap-3 mb-8">
+        <div className="flex flex-col md:flex-row gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Buscar celular..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10" />
+          </div>
+          <Select value={brand} onValueChange={setBrand}>
+            <SelectTrigger className="w-full md:w-40"><SelectValue placeholder="Marca" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as marcas</SelectItem>
+              {brands.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={condition} onValueChange={setCondition}>
+            <SelectTrigger className="w-full md:w-40"><SelectValue placeholder="Condição" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas condições</SelectItem>
+              {CONDITIONS.map(c => <SelectItem key={c} value={c}>{conditionLabel(c)}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={sort} onValueChange={setSort}>
+            <SelectTrigger className="w-full md:w-44"><SlidersHorizontal className="mr-2 h-4 w-4" /><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Mais recentes</SelectItem>
+              <SelectItem value="price-asc">Menor preço</SelectItem>
+              <SelectItem value="price-desc">Maior preço</SelectItem>
+              <SelectItem value="views">Mais vistos</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Select value={brand} onValueChange={setBrand}>
-          <SelectTrigger className="w-full md:w-40"><SelectValue placeholder="Marca" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as marcas</SelectItem>
-            {brands.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={condition} onValueChange={setCondition}>
-          <SelectTrigger className="w-full md:w-40"><SelectValue placeholder="Condição" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas condições</SelectItem>
-            {CONDITIONS.map(c => <SelectItem key={c} value={c}>{conditionLabel(c)}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger className="w-full md:w-44"><SlidersHorizontal className="mr-2 h-4 w-4" /><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="recent">Mais recentes</SelectItem>
-            <SelectItem value="price-asc">Menor preço</SelectItem>
-            <SelectItem value="price-desc">Maior preço</SelectItem>
-            <SelectItem value="views">Mais vistos</SelectItem>
-          </SelectContent>
-        </Select>
+
+        {/* Mobile columns toggle - Only visible on mobile */}
+        <div className="md:hidden flex gap-2">
+          <button
+            onClick={() => setMobileColumns(2)}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex-1 ${
+              mobileColumns === 2
+                ? "bg-white text-black"
+                : "bg-gray-700 text-white hover:bg-gray-600"
+            }`}
+          >
+            2 colunas
+          </button>
+          <button
+            onClick={() => setMobileColumns(1)}
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex-1 ${
+              mobileColumns === 1
+                ? "bg-white text-black"
+                : "bg-gray-700 text-white hover:bg-gray-600"
+            }`}
+          >
+            1 coluna
+          </button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -125,7 +152,7 @@ const Products = () => {
           <p className="text-sm text-muted-foreground mb-4">
             {filtered.length} produto{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className={`grid ${mobileColumns === 1 ? "grid-cols-1" : "grid-cols-2"} md:grid-cols-3 lg:grid-cols-4 gap-4`}>
             {filtered.map(p => <ProductCard key={p.id} product={p} />)}
           </div>
         </div>

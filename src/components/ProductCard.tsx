@@ -68,7 +68,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </Link>
 
-      <div className="p-4 flex flex-col h-full">
+      <div className="p-3 md:p-4 flex flex-col h-full">
         <div className="space-y-2 flex-1">
           <div>
             <p className="text-xs text-muted-foreground">{product.brand}</p>
@@ -89,7 +89,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </div>
         </div>
 
-        <div className="flex gap-2 mt-3">
+        <div className="flex flex-col sm:flex-row gap-2 mt-4">
           <Button asChild size="sm" variant="outline" className="flex-1 h-9" onClick={handleViewDetailsClick}>
             <Link to={`/produto/${product.id}`}>Ver detalhes</Link>
           </Button>
@@ -97,7 +97,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           {!sold && (
             <Button
               size="sm"
-              className="bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground h-9 w-9"
+              className="bg-whatsapp hover:bg-whatsapp-hover text-whatsapp-foreground h-9 w-9 flex-shrink-0"
               onClick={() => {
                 handleWhatsAppClick();
                 window.open(getWhatsAppLink(product), "_blank");

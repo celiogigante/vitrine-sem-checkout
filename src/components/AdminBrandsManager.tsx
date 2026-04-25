@@ -43,12 +43,28 @@ export default function AdminBrandsManager() {
         .select("*")
         .order("order_index");
 
-      if (error) throw error;
-      setBrands((data || []) as Brand[]);
+      if (error) {
+        console.error("Erro Supabase ao carregar marcas:", error);
+        throw error;
+      }
+
+      const brandsList = (data || []) as Brand[];
+      console.log("Marcas carregadas:", brandsList);
+      setBrands(brandsList);
+
+      if (brandsList.length === 0) {
+        toast({
+          title: "Nenhuma marca encontrada",
+          description: "Execute o SQL no Supabase para criar a tabela brands",
+          variant: "default",
+        });
+      }
     } catch (err) {
-      console.error("Erro ao carregar marcas:", err);
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido ao carregar marcas";
+      console.error("Erro ao carregar marcas:", errorMsg);
       toast({
         title: "Erro ao carregar marcas",
+        description: errorMsg,
         variant: "destructive",
       });
     } finally {
@@ -94,9 +110,11 @@ export default function AdminBrandsManager() {
       loadBrands();
       resetForm();
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
       console.error("Erro ao salvar marca:", err);
       toast({
         title: "Erro ao salvar marca",
+        description: errorMsg,
         variant: "destructive",
       });
     } finally {
@@ -127,9 +145,11 @@ export default function AdminBrandsManager() {
       setBrands(brands.filter((b) => b.id !== id));
       toast({ title: "Marca removida" });
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Erro desconhecido";
       console.error("Erro ao deletar marca:", err);
       toast({
         title: "Erro ao deletar marca",
+        description: errorMsg,
         variant: "destructive",
       });
     }

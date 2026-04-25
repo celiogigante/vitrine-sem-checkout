@@ -80,14 +80,15 @@ export default function AdminDashboard() {
         .order("order_index");
 
       if (brandsError) {
+        console.warn("Brands table error, extracting from products:", brandsError);
         // Fallback: extract from products if brands table doesn't exist yet
         const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
           .filter(Boolean)
           .sort();
-        setBrands(uniqueBrands);
+        setBrands(uniqueBrands.length > 0 ? uniqueBrands : ["Apple", "Samsung", "Xiaomi", "LG", "Motorola"]);
       } else {
-        const uniqueBrands = (brandsData || []).map(b => b.name).sort();
-        setBrands(uniqueBrands);
+        const uniqueBrands = (brandsData || []).map(b => b.name);
+        setBrands(uniqueBrands.length > 0 ? uniqueBrands : ["Apple", "Samsung", "Xiaomi", "LG", "Motorola"]);
       }
     } catch (err) {
       console.error("Error loading products:", err);
@@ -370,26 +371,18 @@ export default function AdminDashboard() {
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
-            <div className="flex gap-2">
-              <Select value={form.brand} onValueChange={(v) => setForm({ ...form, brand: v })}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Selecione marca" />
-                </SelectTrigger>
-                <SelectContent>
-                  {brands.map((b) => (
-                    <SelectItem key={b} value={b}>
-                      {b}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Input
-                placeholder="Ou nova marca"
-                value={form.brand}
-                onChange={(e) => setForm({ ...form, brand: e.target.value })}
-                className="flex-1"
-              />
-            </div>
+            <Select value={form.brand} onValueChange={(v) => setForm({ ...form, brand: v })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione marca" />
+              </SelectTrigger>
+              <SelectContent>
+                {brands.map((b) => (
+                  <SelectItem key={b} value={b}>
+                    {b}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Input
               type="number"
               placeholder="Preço"

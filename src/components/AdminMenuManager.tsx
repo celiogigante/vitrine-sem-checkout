@@ -46,22 +46,34 @@ export default function AdminMenuManager() {
     }
   };
 
+  const generateHref = (label: string): string => {
+    // Se já tiver uma URL válida, retorna como está
+    if (label.startsWith("/")) {
+      return label;
+    }
+    // Gera automaticamente um link para filtro de marca
+    return `/produtos?brand=${encodeURIComponent(label)}`;
+  };
+
   const handleAddItem = async () => {
-    if (!newItem.label || !newItem.href) {
+    if (!newItem.label) {
       toast({
-        title: "Preencha label e URL",
+        title: "Preencha o nome/label do item",
         variant: "destructive",
       });
       return;
     }
 
+    // Gera href automaticamente se não foi preenchido
+    const href = newItem.href || generateHref(newItem.label);
+
     try {
       const maxOrder = items.length > 0 ? Math.max(...items.map(i => i.order_index)) : 0;
-      
+
       const { error } = await supabase.from("menu_items").insert([
         {
           label: newItem.label,
-          href: newItem.href,
+          href: href,
           order_index: maxOrder + 1,
           is_visible: true,
         },
@@ -163,15 +175,22 @@ export default function AdminMenuManager() {
         <h2 className="font-semibold text-lg">Novo Item do Menu</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
-            placeholder="Label (ex: Apple)"
+            placeholder="Nome da marca (ex: Apple)"
             value={newItem.label}
             onChange={(e) => setNewItem({ ...newItem, label: e.target.value })}
           />
-          <Input
-            placeholder="URL (ex: /produtos?brand=Apple)"
-            value={newItem.href}
-            onChange={(e) => setNewItem({ ...newItem, href: e.target.value })}
-          />
+          <div className="space-y-1">
+            <Input
+              placeholder="URL (opcional - será gerada automaticamente)"
+              value={newItem.href}
+              onChange={(e) => setNewItem({ ...newItem, href: e.target.value })}
+            />
+            {newItem.label && !newItem.href && (
+              <p className="text-xs text-muted-foreground">
+                Link gerado: <code className="bg-secondary px-2 py-1 rounded">{generateHref(newItem.label)}</code>
+              </p>
+            )}
+          </div>
         </div>
         <Button onClick={handleAddItem}>
           <Plus className="h-4 w-4 mr-2" />

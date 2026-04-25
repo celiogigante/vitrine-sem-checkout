@@ -113,46 +113,41 @@ export default function HeroCarousel() {
     <div className="relative w-full h-full overflow-hidden bg-gray-50">
       {/* Carousel items */}
       <div className="relative w-full h-full">
-        {products.map((product, index) => (
-          <Link
-            key={product.id}
-            to={`/produtos/${product.id}`}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentIndex ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            <div className="w-full h-full flex items-center justify-center cursor-pointer relative group">
-              {/* Product image - full background */}
-              {product.images && product.images.length > 0 ? (
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:brightness-95 transition-all duration-300"
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400">Sem imagem</span>
-                </div>
-              )}
-
-              {/* Product info - overlay at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
-                <h3 className="font-semibold text-lg truncate">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-200">{product.brand}</p>
-                <p className="text-2xl font-bold text-yellow-400 mt-2">
-                  R$ {product.price.toLocaleString("pt-BR")}
-                </p>
-                {product.original_price && (
-                  <p className="text-sm text-gray-300 line-through">
-                    R$ {product.original_price.toLocaleString("pt-BR")}
-                  </p>
-                )}
+        <Link
+          to={`/produto/${currentProduct.id}`}
+          className="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-100"
+        >
+          <div className="w-full h-full flex items-center justify-center cursor-pointer relative group">
+            {/* Product image - full background */}
+            {currentProduct.images && currentProduct.images.length > 0 ? (
+              <img
+                src={currentProduct.images[0]}
+                alt={currentProduct.name}
+                className="w-full h-full object-cover group-hover:brightness-95 transition-all duration-300"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-400">Sem imagem</span>
               </div>
+            )}
+
+            {/* Product info - overlay at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 text-white">
+              <h3 className="font-semibold text-lg truncate">
+                {currentProduct.name}
+              </h3>
+              <p className="text-sm text-gray-200">{currentProduct.brand}</p>
+              <p className="text-2xl font-bold text-yellow-400 mt-2">
+                R$ {currentProduct.price.toLocaleString("pt-BR")}
+              </p>
+              {currentProduct.original_price && (
+                <p className="text-sm text-gray-300 line-through">
+                  R$ {currentProduct.original_price.toLocaleString("pt-BR")}
+                </p>
+              )}
             </div>
-          </Link>
-        ))}
+          </div>
+        </Link>
       </div>
 
       {/* Navigation buttons */}

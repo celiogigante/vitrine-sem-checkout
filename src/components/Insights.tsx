@@ -22,6 +22,7 @@ interface InsightsData {
 export function Insights() {
   const [data, setData] = useState<InsightsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
   useEffect(() => {
     loadInsights();
@@ -32,33 +33,40 @@ export function Insights() {
       setIsLoading(true);
 
       // Load products
-      const { data: products } = await supabase
+      const { data: products, error: productsError } = await supabase
         .from("products")
         .select("*");
 
-      // Load customers
+      if (productsError) {
+        console.error("Error loading products:", productsError);
+        throw productsError;
+      }
+
+      // Load customers with error handling
+      let customerList = [];
       const { data: customers } = await supabase
         .from("customers")
         .select("*");
+      if (customers) customerList = customers;
 
-      // Load orders
+      // Load orders with error handling
+      let orderList = [];
       const { data: orders } = await supabase
         .from("orders")
         .select("*");
+      if (orders) orderList = orders;
 
       // Load product clicks with error handling
       let clickList: Array<{ product_id: string }> = [];
-      const { data: clicks, error: clicksError } = await supabase
+      const { data: clicks } = await supabase
         .from("product_clicks")
         .select("product_id");
 
-      if (!clicksError) {
+      if (clicks) {
         clickList = (clicks || []) as Array<{ product_id: string }>;
       }
 
       const productList = (products || []) as Product[];
-      const customerList = (customers || []) as Customer[];
-      const orderList = (orders || []) as Order[];
 
       // Calculate metrics
       const totalProducts = productList.length;
@@ -146,8 +154,12 @@ export function Insights() {
         orderStatus,
         averageProductPrice,
       });
+
+      setLastRefresh(new Date());
     } catch (err) {
       console.error("Error loading insights:", err);
+      const errorMsg = err instanceof Error ? err.message : "Erro ao carregar insights";
+      alert(`Erro ao carregar insights: ${errorMsg}`);
     } finally {
       setIsLoading(false);
     }
@@ -162,7 +174,20 @@ export function Insights() {
   }
 
   if (!data) {
-    return null;
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <p className="text-muted-foreground mb-4">Erro ao carregar os insights</p>
+        <button
+          onClick={() => {
+            setIsLoading(true);
+            loadInsights();
+          }}
+          className="text-primary hover:underline cursor-pointer"
+        >
+          Tentar novamente
+        </button>
+      </div>
+    );
   }
 
   const COLORS = [
@@ -178,6 +203,21 @@ export function Insights() {
 
   return (
     <div className="space-y-6">
+      {/* Refresh Info */}
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <p>Última atualização: {lastRefresh.toLocaleTimeString("pt-BR")}</p>
+        <button
+          onClick={() => {
+            setIsLoading(true);
+            loadInsights();
+          }}
+          disabled={isLoading}
+          className="text-primary hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? "Carregando..." : "↻ Atualizar agora"}
+        </button>
+      </div>
+
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-lg border bg-card p-4">

@@ -1,18 +1,16 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import WhatsAppFloat from "./WhatsAppFloat";
-import ScrollToTop from "./ScrollToTop";
+import FloatingFooterBar from "./FloatingFooterBar";
 
 const Layout = () => (
-  <div className="flex min-h-screen flex-col">
+  <div className="flex min-h-screen flex-col pb-20">
     <Header />
     <main className="flex-1" style={{ backgroundColor: '#3A3A32' }}>
       <Outlet />
     </main>
     <Footer />
-    <WhatsAppFloat />
-    <ScrollToTop />
+    <FloatingFooterBar />
   </div>
 );
 

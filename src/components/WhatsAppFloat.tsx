@@ -13,7 +13,7 @@ const WhatsAppFloat = () => {
       href={`https://wa.me/${num}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110"
+      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110 animate-float-bounce"
       aria-label="Contato via WhatsApp"
     >
       <img

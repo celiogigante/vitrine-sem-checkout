@@ -18,11 +18,16 @@ export interface Product {
   original_price?: number;
   description: string;
   condition: "novo" | "seminovo" | "excelente" | "bom" | "regular";
+  status: "disponivel" | "vendido" | "reservado";
+  battery_percentage?: number;
+  general_condition?: string;
+  slug?: string;
   images: string[];
   video_url?: string;
   specs: Record<string, string>;
   featured: boolean;
   promotion: boolean;
+  is_on_request: boolean;
   views: number;
   created_at: string;
   updated_at: string;

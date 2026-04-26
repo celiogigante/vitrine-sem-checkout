@@ -50,6 +50,9 @@ export default function AdminDashboard() {
     original_price: undefined as number | undefined,
     description: "",
     condition: "seminovo",
+    status: "disponivel" as "disponivel" | "vendido",
+    battery_percentage: undefined as number | undefined,
+    general_condition: "",
     images: [] as string[],
     video_url: "",
     specs: {} as Record<string, string>,
@@ -119,6 +122,9 @@ export default function AdminDashboard() {
         original_price: form.original_price || null,
         description: form.description,
         condition: form.condition,
+        status: form.status,
+        battery_percentage: form.battery_percentage || null,
+        general_condition: form.general_condition || null,
         images: form.images.filter((i) => i.trim()),
         video_url: form.video_url || null,
         specs: form.specs,
@@ -163,6 +169,9 @@ export default function AdminDashboard() {
       original_price: product.original_price,
       description: product.description,
       condition: product.condition,
+      status: (product as any).status || "disponivel",
+      battery_percentage: (product as any).battery_percentage || undefined,
+      general_condition: (product as any).general_condition || "",
       images: product.images && product.images.length ? product.images : [],
       video_url: product.video_url || "",
       specs: product.specs,
@@ -201,6 +210,9 @@ export default function AdminDashboard() {
       original_price: undefined,
       description: "",
       condition: "seminovo",
+      status: "disponivel",
+      battery_percentage: undefined,
+      general_condition: "",
       images: [],
       video_url: "",
       specs: {},
@@ -361,101 +373,169 @@ export default function AdminDashboard() {
       {activeTab === "produtos" && (
         <>
           {showForm && (
-        <div className="mb-8 rounded-xl border bg-card p-6 space-y-4">
+        <div className="mb-8 rounded-xl border bg-card p-6 space-y-6">
           <h2 className="font-semibold text-lg">
             {editing ? "Editar produto" : "Novo produto"}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              placeholder="Nome do produto"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
-            <Select value={form.brand} onValueChange={(v) => setForm({ ...form, brand: v })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione marca" />
-              </SelectTrigger>
-              <SelectContent>
-                {brands.map((b) => (
-                  <SelectItem key={b} value={b}>
-                    {b}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              type="number"
-              placeholder="Preço"
-              value={form.price || ""}
-              onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-            />
-            <Input
-              type="number"
-              placeholder="Preço original (opcional)"
-              value={form.original_price || ""}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  original_price: Number(e.target.value) || undefined,
-                })
-              }
-            />
-            <Select
-              value={form.condition}
-              onValueChange={(v) => setForm({ ...form, condition: v })}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {CONDITIONS.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {conditionLabel(c)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="md:col-span-2">
-              <ImageUpload
-                onImagesUrls={(urls) => setForm({ ...form, images: urls })}
-                onVideoUrl={(url) => setForm({ ...form, video_url: url })}
-                currentImages={form.images}
-                currentVideo={form.video_url}
+
+          {/* Básico */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Informações Básicas</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                placeholder="Nome do produto"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+              <Select value={form.brand} onValueChange={(v) => setForm({ ...form, brand: v })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione marca" />
+                </SelectTrigger>
+                <SelectContent>
+                  {brands.map((b) => (
+                    <SelectItem key={b} value={b}>
+                      {b}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Preços */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Preços</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                type="number"
+                placeholder="Preço (R$)"
+                value={form.price || ""}
+                onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+              />
+              <Input
+                type="number"
+                placeholder="Preço original (opcional)"
+                value={form.original_price || ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    original_price: Number(e.target.value) || undefined,
+                  })
+                }
               />
             </div>
           </div>
-          <Textarea
-            placeholder="Descrição"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-          />
-          <div className="flex flex-wrap gap-4">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+
+          {/* Status e Condição */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Status e Condição</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as any })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="disponivel">Disponível</SelectItem>
+                  <SelectItem value="vendido">Vendido</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={form.condition} onValueChange={(v) => setForm({ ...form, condition: v })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Condição" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CONDITIONS.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {conditionLabel(c)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input
+                type="number"
+                placeholder="Bateria (%)"
+                value={form.battery_percentage || ""}
+                onChange={(e) => setForm({ ...form, battery_percentage: Number(e.target.value) || undefined })}
               />
-              Destaque
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.promotion}
-                onChange={(e) => setForm({ ...form, promotion: e.target.checked })}
-              />
-              Promoção
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.is_on_request}
-                onChange={(e) => setForm({ ...form, is_on_request: e.target.checked })}
-              />
-              Por Pedido (até 3 dias úteis)
-            </label>
+            </div>
+            <Textarea
+              placeholder="Estado geral do produto (ex: Sem arranhões, Vidro levemente marcado)"
+              value={form.general_condition}
+              onChange={(e) => setForm({ ...form, general_condition: e.target.value })}
+              className="min-h-16"
+            />
           </div>
-          <div className="flex gap-2">
+
+          {/* Mídia */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Imagens e Vídeo</h3>
+            <ImageUpload
+              onImagesUrls={(urls) => setForm({ ...form, images: urls })}
+              onVideoUrl={(url) => setForm({ ...form, video_url: url })}
+              currentImages={form.images}
+              currentVideo={form.video_url}
+            />
+          </div>
+
+          {/* Descrição */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Descrição</h3>
+            <Textarea
+              placeholder="Descrição detalhada do produto"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              className="min-h-24"
+            />
+          </div>
+
+          {/* Especificações */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Especificações</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {["RAM", "CHIP", "TELA", "BATERIA", "CÂMERA", "ARMAZENAMENTO"].map((key) => (
+                <Input
+                  key={key}
+                  placeholder={key}
+                  value={form.specs[key] || ""}
+                  onChange={(e) => setForm({ ...form, specs: { ...form.specs, [key]: e.target.value } })}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Flags */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-sm text-muted-foreground">Opções</h3>
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.featured}
+                  onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                />
+                Destaque
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.promotion}
+                  onChange={(e) => setForm({ ...form, promotion: e.target.checked })}
+                />
+                Promoção
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.is_on_request}
+                  onChange={(e) => setForm({ ...form, is_on_request: e.target.checked })}
+                />
+                Por Pedido (até 3 dias úteis)
+              </label>
+            </div>
+          </div>
+
+          {/* Botões */}
+          <div className="flex gap-2 pt-4">
             <Button onClick={handleSave} disabled={isSaving}>
               {isSaving ? (
                 <>
@@ -463,9 +543,9 @@ export default function AdminDashboard() {
                   Salvando...
                 </>
               ) : editing ? (
-                "Salvar"
+                "Salvar Alterações"
               ) : (
-                "Adicionar"
+                "Adicionar Produto"
               )}
             </Button>
             <Button variant="outline" onClick={resetForm}>

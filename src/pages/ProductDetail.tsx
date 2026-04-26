@@ -112,11 +112,11 @@ const ProductDetail = () => {
         <div className="space-y-3 md:space-y-4">
           {product.images.length > 0 ? (
             <>
-              <div className={`aspect-square overflow-hidden rounded-lg md:rounded-xl border bg-gradient-to-b from-gray-800 to-gray-900 transition-opacity flex items-center justify-center ${sold ? "opacity-70" : ""}`}>
+              <div className={`w-full overflow-hidden rounded-lg md:rounded-xl border bg-gradient-to-b from-gray-800 to-gray-900 transition-opacity flex items-center justify-center ${sold ? "opacity-70" : ""}`}>
                 <img
                   src={product.images[selectedImage]}
                   alt={product.name}
-                  className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
+                  className="w-full h-auto max-h-[600px] object-contain transition-transform duration-300 hover:scale-105"
                   loading="lazy"
                 />
               </div>

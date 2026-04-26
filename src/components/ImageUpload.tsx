@@ -167,6 +167,17 @@ export const ImageUpload = ({
           </div>
         )}
 
+        <div className="mt-3 p-3 rounded-lg bg-blue-50 border border-blue-200">
+          <p className="text-xs font-semibold text-blue-900 mb-2">💡 Dica: Tamanho ideal de imagem</p>
+          <ul className="text-xs text-blue-800 space-y-1">
+            <li>• <strong>Quadrados (1:1):</strong> 800x800px - 1200x1200px</li>
+            <li>• <strong>Retratos (9:16):</strong> 600x1000px - 900x1600px</li>
+            <li>• <strong>Paisagens (16:9):</strong> 1200x675px - 1600x900px</li>
+            <li>• <strong>Geral:</strong> Mínimo 600px de largura para boa qualidade</li>
+            <li>• Comprimir para reduzir tamanho antes de enviar</li>
+          </ul>
+        </div>
+
         <p className="text-xs text-muted-foreground mt-2">
           Máximo 5 imagens • 5MB cada • PNG, JPG ou WebP
         </p>

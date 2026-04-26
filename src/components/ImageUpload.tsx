@@ -171,10 +171,11 @@ export const ImageUpload = ({
           <p className="text-xs font-semibold text-blue-900 mb-2">💡 Dica: Tamanho ideal de imagem</p>
           <ul className="text-xs text-blue-800 space-y-1">
             <li>• <strong>Quadrados (1:1):</strong> 800x800px - 1200x1200px</li>
-            <li>• <strong>Retratos (9:16):</strong> 600x1000px - 900x1600px</li>
+            <li>• <strong>Retratos (9:16):</strong> 600x1000px - 900x1600px (RECOMENDADO)</li>
             <li>• <strong>Paisagens (16:9):</strong> 1200x675px - 1600x900px</li>
             <li>• <strong>Geral:</strong> Mínimo 600px de largura para boa qualidade</li>
             <li>• Comprimir para reduzir tamanho antes de enviar</li>
+            <li>• <strong>Após upload:</strong> Marque a imagem principal no formulário do produto</li>
           </ul>
         </div>
 

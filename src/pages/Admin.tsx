@@ -19,6 +19,7 @@ const emptyForm = {
   slug: "",
   images: [""], specs: {} as Record<string, string>,
   featured: false, promotion: false,
+  primaryImageIndex: 0,
 };
 
 const Admin = () => {
@@ -64,6 +65,7 @@ const Admin = () => {
       battery: p.battery, generalState: p.generalState || "", slug: p.slug,
       images: p.images.length ? p.images : [""], specs: p.specs,
       featured: p.featured, promotion: p.promotion,
+      primaryImageIndex: p.primaryImageIndex ?? 0,
     });
     setEditing(p.id);
     setShowForm(true);
@@ -151,11 +153,24 @@ const Admin = () => {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Imagens (URLs)</label>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {form.images.map((img, i) => (
-                    <div key={i} className="flex gap-2">
-                      <Input placeholder="URL da imagem" value={img} onChange={e => updateImage(i, e.target.value)} />
-                      <Button type="button" variant="ghost" size="icon" onClick={() => removeImage(i)}><X className="h-4 w-4" /></Button>
+                    <div key={i} className="border rounded-lg p-3 space-y-2 bg-secondary/50">
+                      <div className="flex gap-2">
+                        <Input placeholder="URL da imagem" value={img} onChange={e => updateImage(i, e.target.value)} />
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeImage(i)}><X className="h-4 w-4" /></Button>
+                      </div>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input
+                          type="radio"
+                          name="primaryImage"
+                          checked={(form.primaryImageIndex ?? 0) === i}
+                          onChange={() => setForm({ ...form, primaryImageIndex: i })}
+                          className="w-4 h-4"
+                        />
+                        <span className="font-medium">Imagem principal (capa)</span>
+                        {(form.primaryImageIndex ?? 0) === i && <span className="text-xs bg-yellow-500 text-white px-2 py-1 rounded">PRINCIPAL</span>}
+                      </label>
                     </div>
                   ))}
                   <Button type="button" variant="outline" size="sm" onClick={addImage}><Plus className="h-4 w-4 mr-1" /> Adicionar imagem</Button>

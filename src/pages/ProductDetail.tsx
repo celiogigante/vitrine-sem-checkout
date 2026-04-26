@@ -13,6 +13,13 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Set initial image to primary image index when product loads
+  useEffect(() => {
+    if (product && product.images.length > 0) {
+      setSelectedImage(product.primaryImageIndex ?? 0);
+    }
+  }, [product?.id]);
+
   const handleWhatsAppClick = () => {
     if (product) {
       recordProductClick(product.id, { type: "whatsapp" });

@@ -108,6 +108,8 @@ export default function HeroCarousel() {
   }
 
   const currentProduct = products[currentIndex];
+  const primaryImageIndex = currentProduct.primaryImageIndex ?? 0;
+  const currentImage = currentProduct.images?.[primaryImageIndex] || currentProduct.images?.[0];
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-gray-50">
@@ -119,9 +121,9 @@ export default function HeroCarousel() {
         >
           <div className="w-full h-full flex items-center justify-center cursor-pointer relative group">
             {/* Product image - full background */}
-            {currentProduct.images && currentProduct.images.length > 0 ? (
+            {currentImage ? (
               <img
-                src={currentProduct.images[0]}
+                src={currentImage}
                 alt={currentProduct.name}
                 className="w-full h-full object-cover group-hover:brightness-95 transition-all duration-300"
               />

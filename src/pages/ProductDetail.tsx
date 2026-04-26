@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, MessageCircle, Shield, CheckCircle, BatteryFull } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { conditionLabel, conditionColor, getWhatsAppLink, statusLabel, statusColor, type Product } from "@/lib/products";
-import { supabase } from "@/lib/supabase";
+import { conditionLabel, conditionColor, getWhatsAppLink, statusLabel, statusColor, type Product, getProduct, incrementViews } from "@/lib/products";
 import { recordProductClick, recordProductView } from "@/hooks/useProductClick";
 
 const ProductDetail = () => {
@@ -32,53 +31,17 @@ const ProductDetail = () => {
     }
   }, [id]);
 
-  const loadProduct = async (productId: string) => {
+  const loadProduct = (productId: string) => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("id", productId)
-        .single();
+      const product = getProduct(productId);
 
-      if (error) throw error;
-
-      if (data) {
-        const product: Product & { is_on_request?: boolean } = {
-          id: data.id,
-          name: data.name,
-          brand: data.brand,
-          price: data.price,
-          originalPrice: data.original_price,
-          description: data.description,
-          condition: data.condition,
-          status: data.status || "disponivel",
-          battery: data.battery_percentage,
-          generalState: data.general_condition,
-          slug: data.slug || data.id,
-          images: data.images || [],
-          videoUrl: data.video_url,
-          specs: data.specs || {},
-          featured: data.featured,
-          promotion: data.promotion,
-          views: data.views,
-          createdAt: data.created_at,
-          is_on_request: data.is_on_request || false,
-        };
+      if (product) {
         setProduct(product);
 
         // Increment views
-        const newViews = (data.views || 0) + 1;
-        const { error: updateError } = await supabase
-          .from("products")
-          .update({ views: newViews })
-          .eq("id", productId);
-
-        if (updateError) {
-          console.error("Erro ao atualizar views:", updateError);
-        } else {
-          console.log("Views incrementadas para:", newViews);
-        }
+        incrementViews(productId);
+        console.log("Views incrementadas para:", (product.views || 0) + 1);
 
         // Record product view
         recordProductView(productId);

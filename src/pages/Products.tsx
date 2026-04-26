@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProductCard from "@/components/ProductCard";
 import { conditionLabel } from "@/lib/productHelpers";
-import { supabase, type Product } from "@/lib/supabase";
+import { getProducts, type Product } from "@/lib/products";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"] as const;
 
@@ -24,34 +24,16 @@ const Products = () => {
     loadProducts();
   }, []);
 
-  const loadProducts = async () => {
+  const loadProducts = () => {
     try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      const productList = (data || []) as Product[];
+      const productList = getProducts() as Product[];
       setProducts(productList);
 
-      // Load brands from brands table
-      const { data: brandsData, error: brandsError } = await supabase
-        .from("brands")
-        .select("name")
-        .eq("is_visible", true)
-        .order("order_index");
-
-      if (brandsError) {
-        // Fallback: extract from products if brands table doesn't exist yet
-        const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
-          .filter(Boolean)
-          .sort();
-        setBrands(uniqueBrands);
-      } else {
-        const uniqueBrands = (brandsData || []).map(b => b.name).sort();
-        setBrands(uniqueBrands);
-      }
+      // Extract brands from products
+      const uniqueBrands = Array.from(new Set(productList.map(p => p.brand)))
+        .filter(Boolean)
+        .sort();
+      setBrands(uniqueBrands);
     } catch (err) {
       console.error("Erro ao carregar produtos:", err);
     } finally {

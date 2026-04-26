@@ -31,16 +31,16 @@ const ProductDetail = () => {
     }
   }, [id]);
 
-  const loadProduct = (productId: string) => {
+  const loadProduct = async (productId: string) => {
     try {
       setIsLoading(true);
-      const product = getProduct(productId);
+      const product = await getProduct(productId);
 
       if (product) {
         setProduct(product);
 
         // Increment views
-        incrementViews(productId);
+        await incrementViews(productId);
         console.log("Views incrementadas para:", (product.views || 0) + 1);
 
         // Record product view

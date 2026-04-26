@@ -32,7 +32,17 @@ const Admin = () => {
   const [settings, setSettings] = useState<SiteSettings>(getSettings());
   const { toast } = useToast();
 
-  useEffect(() => { if (authed) { setProducts(getProducts()); setSettings(getSettings()); } }, [authed]);
+  useEffect(() => {
+    if (authed) {
+      loadProducts();
+      setSettings(getSettings());
+    }
+  }, [authed]);
+
+  const loadProducts = async () => {
+    const prods = await getProducts();
+    setProducts(prods);
+  };
 
   const handleLogin = () => {
     if (login(password)) setAuthed(true);
@@ -41,20 +51,20 @@ const Admin = () => {
 
   const resetForm = () => { setForm(emptyForm); setEditing(null); setShowForm(false); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name || !form.price) {
       toast({ title: "Preencha nome e preço", variant: "destructive" });
       return;
     }
     const data = { ...form, slug: form.slug || slugify(form.name), images: form.images.filter(i => i.trim()) };
     if (editing) {
-      updateProduct(editing, data);
+      await updateProduct(editing, data);
       toast({ title: "Produto atualizado!" });
     } else {
-      addProduct(data);
+      await addProduct(data);
       toast({ title: "Produto adicionado!" });
     }
-    setProducts(getProducts());
+    await loadProducts();
     resetForm();
   };
 
@@ -71,11 +81,15 @@ const Admin = () => {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Excluir este produto?")) return;
-    deleteProduct(id);
-    setProducts(getProducts());
-    toast({ title: "Produto removido" });
+    const success = await deleteProduct(id);
+    if (success) {
+      await loadProducts();
+      toast({ title: "Produto removido" });
+    } else {
+      toast({ title: "Erro ao remover produto", variant: "destructive" });
+    }
   };
 
   const updateImage = (i: number, v: string) => {

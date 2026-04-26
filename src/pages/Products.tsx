@@ -24,9 +24,9 @@ const Products = () => {
     loadProducts();
   }, []);
 
-  const loadProducts = () => {
+  const loadProducts = async () => {
     try {
-      const productList = getProducts() as Product[];
+      const productList = await getProducts();
       setProducts(productList);
 
       // Extract brands from products

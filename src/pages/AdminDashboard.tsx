@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/authContext";
+import { supabase } from "@/lib/supabase";
 import { getProducts, updateProduct, deleteProduct, addProduct, BRANDS, type Product } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,8 @@ import AdminMenuManager from "@/components/AdminMenuManager";
 import AdminHeroConfig from "@/components/AdminHeroConfig";
 import AdminProductHighlights from "@/components/AdminProductHighlights";
 import AdminBrandsManager from "@/components/AdminBrandsManager";
-import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag, Database } from "lucide-react";
+import MigrationHelper from "@/components/MigrationHelper";
 import { useToast } from "@/hooks/use-toast";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"];
@@ -40,7 +42,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "marcas" | "hero" | "destaques">("insights");
+  const [activeTab, setActiveTab] = useState<"insights" | "produtos" | "menu" | "marcas" | "hero" | "destaques" | "migracao">("insights");
 
   const [form, setForm] = useState({
     name: "",
@@ -67,7 +69,7 @@ export default function AdminDashboard() {
   const loadProducts = async () => {
     try {
       setIsLoading(true);
-      const productList = getProducts();
+      const productList = await getProducts();
       setProducts(productList);
 
       // Extract brands from products
@@ -112,17 +114,18 @@ export default function AdminDashboard() {
         specs: form.specs,
         featured: form.featured,
         promotion: form.promotion,
+        isOnRequest: form.is_on_request,
       };
 
       if (editing) {
-        updateProduct(editing, productData);
+        await updateProduct(editing, productData);
         toast({ title: "Produto atualizado!" });
       } else {
-        addProduct(productData);
+        await addProduct(productData);
         toast({ title: "Produto adicionado!" });
       }
 
-      loadProducts();
+      await loadProducts();
       resetForm();
     } catch (err) {
       console.error("Error saving product:", err);
@@ -140,30 +143,37 @@ export default function AdminDashboard() {
       name: product.name,
       brand: product.brand,
       price: product.price,
-      original_price: (product as any).originalPrice || undefined,
+      original_price: product.originalPrice || undefined,
       description: product.description,
       condition: product.condition,
       status: product.status || "disponivel",
-      battery_percentage: (product as any).battery || undefined,
-      general_condition: (product as any).generalState || "",
+      battery_percentage: product.battery || undefined,
+      general_condition: product.generalState || "",
       images: product.images && product.images.length ? product.images : [],
-      video_url: (product as any).videoUrl || "",
+      video_url: product.videoUrl || "",
       specs: product.specs,
       featured: product.featured,
       promotion: product.promotion,
-      is_on_request: (product as any).is_on_request || false,
+      is_on_request: product.isOnRequest || false,
     });
     setEditing(product.id);
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja deletar este produto?")) return;
 
     try {
-      deleteProduct(id);
-      setProducts(products.filter((p) => p.id !== id));
-      toast({ title: "Produto removido" });
+      const success = await deleteProduct(id);
+      if (success) {
+        setProducts(products.filter((p) => p.id !== id));
+        toast({ title: "Produto removido" });
+      } else {
+        toast({
+          title: "Erro ao deletar produto",
+          variant: "destructive",
+        });
+      }
     } catch (err) {
       console.error("Error deleting product:", err);
       toast({
@@ -303,6 +313,17 @@ export default function AdminDashboard() {
           <Star className="h-4 w-4" />
           Destaques
         </button>
+        <button
+          onClick={() => setActiveTab("migracao")}
+          className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${
+            activeTab === "migracao"
+              ? "border-primary text-primary"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <Database className="h-4 w-4" />
+          Migração
+        </button>
       </div>
 
       {/* Insights Tab */}
@@ -337,6 +358,13 @@ export default function AdminDashboard() {
       {activeTab === "destaques" && (
         <div className="mb-8">
           <AdminProductHighlights />
+        </div>
+      )}
+
+      {/* Migração Tab */}
+      {activeTab === "migracao" && (
+        <div className="mb-8">
+          <MigrationHelper />
         </div>
       )}
 

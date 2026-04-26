@@ -85,17 +85,17 @@ const ProductDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <p className="text-lg text-gray-300">Carregando produto...</p>
+      <div className="container mx-auto px-4 py-12 md:py-20 text-center">
+        <p className="text-base md:text-lg text-gray-300">Carregando produto...</p>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <p className="text-lg text-gray-300 mb-6">Produto não encontrado.</p>
-        <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"><Link to="/produtos">Voltar aos produtos</Link></Button>
+      <div className="container mx-auto px-4 py-12 md:py-20 text-center">
+        <p className="text-base md:text-lg text-gray-300 mb-4 md:mb-6">Produto não encontrado.</p>
+        <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-sm md:text-base"><Link to="/produtos">Voltar aos produtos</Link></Button>
       </div>
     );
   }
@@ -103,23 +103,32 @@ const ProductDetail = () => {
   const sold = product.status === "vendido";
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Link to="/produtos" className="inline-flex items-center gap-1 text-sm text-gray-300 hover:text-yellow-400 transition-colors mb-6">
-        <ArrowLeft className="h-4 w-4" /> Voltar aos produtos
+    <div className="container mx-auto px-4 py-6 md:py-8">
+      <Link to="/produtos" className="inline-flex items-center gap-1 text-xs md:text-sm text-gray-300 hover:text-yellow-400 transition-colors mb-4 md:mb-6">
+        <ArrowLeft className="h-3 md:h-4 w-3 md:w-4" /> Voltar aos produtos
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-        <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
+        <div className="space-y-3 md:space-y-4">
           {product.images.length > 0 ? (
             <>
-              <div className={`aspect-square overflow-hidden rounded-xl border bg-secondary ${sold ? "opacity-70" : ""}`}>
-                <img src={product.images[selectedImage]} alt={product.name} className="h-full w-full object-cover" />
+              <div className={`aspect-square overflow-hidden rounded-lg md:rounded-xl border bg-gradient-to-b from-gray-800 to-gray-900 transition-opacity flex items-center justify-center ${sold ? "opacity-70" : ""}`}>
+                <img
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  className="h-full w-full object-contain transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                />
               </div>
               {product.images.length > 1 && (
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap overflow-x-auto pb-2">
                   {product.images.map((img, i) => (
-                    <button key={i} onClick={() => setSelectedImage(i)} className={`h-16 w-16 rounded-lg border overflow-hidden ${i === selectedImage ? "ring-2 ring-primary" : ""}`}>
-                      <img src={img} alt="" className="h-full w-full object-cover" />
+                    <button
+                      key={i}
+                      onClick={() => setSelectedImage(i)}
+                      className={`flex-shrink-0 h-14 w-14 md:h-16 md:w-16 rounded-lg border overflow-hidden transition-all bg-gray-800 flex items-center justify-center ${i === selectedImage ? "ring-2 ring-yellow-400 scale-105" : "hover:scale-105"}`}
+                    >
+                      <img src={img} alt="" className="h-full w-full object-contain" />
                     </button>
                   ))}
                 </div>
@@ -128,11 +137,11 @@ const ProductDetail = () => {
           ) : null}
 
           {product.videoUrl && (
-            <div className="rounded-xl border overflow-hidden bg-black">
+            <div className="rounded-lg md:rounded-xl border overflow-hidden bg-black aspect-video">
               <iframe
                 src={product.videoUrl}
                 title="Product video"
-                className="w-full h-96"
+                className="w-full h-full"
                 allowFullScreen
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -141,10 +150,10 @@ const ProductDetail = () => {
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <div>
-            <p className="text-sm font-semibold text-yellow-400 mb-2 uppercase tracking-wider">{product.brand}</p>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{product.name}</h1>
+            <p className="text-xs md:text-sm font-semibold text-yellow-400 mb-2 uppercase tracking-wider">{product.brand}</p>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4 leading-tight">{product.name}</h1>
             <div className="flex flex-wrap gap-2">
               <Badge className={statusColor(product.status)}>{statusLabel(product.status)}</Badge>
               <Badge className={conditionColor(product.condition)}>{conditionLabel(product.condition)}</Badge>
@@ -155,28 +164,28 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-6 border border-gray-700">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-lg md:rounded-xl p-4 md:p-6 border border-gray-700">
             {product.originalPrice && (
-              <p className="text-sm text-gray-400 line-through mb-2">R$ {product.originalPrice.toLocaleString("pt-BR")}</p>
+              <p className="text-xs md:text-sm text-gray-400 line-through mb-2">R$ {product.originalPrice.toLocaleString("pt-BR")}</p>
             )}
-            <p className="text-5xl font-extrabold text-yellow-400">R$ {product.price.toLocaleString("pt-BR")}</p>
+            <p className="text-4xl md:text-5xl font-extrabold text-yellow-400">R$ {product.price.toLocaleString("pt-BR")}</p>
           </div>
 
           {!sold ? (
             <>
               <Button
                 size="lg"
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white text-base py-6 font-semibold shadow-lg"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white text-sm md:text-base py-5 md:py-6 font-semibold shadow-lg transition-all active:scale-95"
                 onClick={() => {
                   handleWhatsAppClick();
                   window.open(getWhatsAppLink(product), "_blank");
                 }}
               >
-                <MessageCircle className="mr-2 h-5 w-5" /> Negociar pelo WhatsApp
+                <MessageCircle className="mr-2 h-4 md:h-5 w-4 md:w-5" /> Negociar pelo WhatsApp
               </Button>
               {(product as any).is_on_request && (
-                <div className="rounded-lg border border-orange-600 bg-orange-900/30 p-4">
-                  <p className="text-sm font-medium text-orange-300 mb-1">⏱️ Produto Por Pedido</p>
+                <div className="rounded-lg border border-orange-600 bg-orange-900/30 p-3 md:p-4">
+                  <p className="text-xs md:text-sm font-medium text-orange-300 mb-1">⏱️ Produto Por Pedido</p>
                   <p className="text-xs text-orange-200">
                     Este produto é vendido por pedido. O prazo de entrega é de até 3 dias úteis após confirmação do pagamento.
                   </p>
@@ -184,37 +193,37 @@ const ProductDetail = () => {
               )}
             </>
           ) : (
-            <Button size="lg" disabled className="w-full text-base py-6">Produto vendido</Button>
+            <Button size="lg" disabled className="w-full text-sm md:text-base py-5 md:py-6">Produto vendido</Button>
           )}
 
-          <div className="flex flex-wrap gap-6 text-sm text-gray-300 pt-2 border-t border-gray-700">
-            <span className="flex items-center gap-2"><Shield className="h-4 w-4 text-yellow-400" /> Garantia 90 dias</span>
-            <span className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-yellow-400" /> Testado</span>
+          <div className="flex flex-wrap gap-4 md:gap-6 text-xs md:text-sm text-gray-300 pt-2 border-t border-gray-700">
+            <span className="flex items-center gap-2"><Shield className="h-3 md:h-4 w-3 md:w-4 text-yellow-400 flex-shrink-0" /> Garantia 90 dias</span>
+            <span className="flex items-center gap-2"><CheckCircle className="h-3 md:h-4 w-3 md:w-4 text-yellow-400 flex-shrink-0" /> Testado</span>
             {product.battery !== undefined && (
-              <span className="flex items-center gap-2"><BatteryFull className="h-4 w-4 text-yellow-400" /> Bateria {product.battery}%</span>
+              <span className="flex items-center gap-2"><BatteryFull className="h-3 md:h-4 w-3 md:w-4 text-yellow-400 flex-shrink-0" /> Bateria {product.battery}%</span>
             )}
           </div>
 
           {product.generalState && (
-            <div className="rounded-lg border border-gray-700 bg-gray-900 p-4">
+            <div className="rounded-lg border border-gray-700 bg-gray-900 p-3 md:p-4">
               <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide">Estado Geral</p>
               <p className="text-sm font-medium text-white">{product.generalState}</p>
             </div>
           )}
 
           <div>
-            <h2 className="font-semibold text-white mb-3 text-lg">Descrição</h2>
-            <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-line">{product.description}</p>
+            <h2 className="font-semibold text-white mb-2 md:mb-3 text-base md:text-lg">Descrição</h2>
+            <p className="text-xs md:text-sm text-gray-300 leading-relaxed whitespace-pre-line">{product.description}</p>
           </div>
 
           {Object.keys(product.specs).length > 0 && (
             <div>
-              <h2 className="font-semibold text-white mb-3 text-lg">Especificações</h2>
-              <div className="grid grid-cols-2 gap-3">
+              <h2 className="font-semibold text-white mb-2 md:mb-3 text-base md:text-lg">Especificações</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                 {Object.entries(product.specs).map(([key, value]) => (
-                  <div key={key} className="rounded-lg bg-gray-900 border border-gray-700 p-4">
+                  <div key={key} className="rounded-lg bg-gray-900 border border-gray-700 p-3 md:p-4">
                     <p className="text-xs text-gray-400 mb-1 uppercase tracking-wide">{key}</p>
-                    <p className="text-sm font-medium text-white">{value}</p>
+                    <p className="text-xs md:text-sm font-medium text-white">{value}</p>
                   </div>
                 ))}
               </div>

@@ -8,12 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { ImageUpload } from "@/components/ImageUpload";
 import { Insights } from "@/components/Insights";
 import AdminMenuManager from "@/components/AdminMenuManager";
 import AdminHeroConfig from "@/components/AdminHeroConfig";
 import AdminProductHighlights from "@/components/AdminProductHighlights";
 import AdminBrandsManager from "@/components/AdminBrandsManager";
-import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag, X } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const CONDITIONS = ["novo", "seminovo", "excelente", "bom", "regular"];
@@ -49,27 +50,16 @@ export default function AdminDashboard() {
     original_price: undefined as number | undefined,
     description: "",
     condition: "seminovo",
-    status: "disponivel",
+    status: "disponivel" as "disponivel" | "vendido" | "reservado",
     battery_percentage: undefined as number | undefined,
     general_condition: "",
-    slug: "",
-    images: [""] as string[],
+    images: [] as string[],
     video_url: "",
     specs: {} as Record<string, string>,
     featured: false,
     promotion: false,
     is_on_request: false,
   });
-
-  const updateImage = (i: number, v: string) => {
-    const imgs = [...form.images];
-    imgs[i] = v;
-    setForm({ ...form, images: imgs });
-  };
-
-  const addImage = () => setForm({ ...form, images: [...form.images, ""] });
-
-  const removeImage = (i: number) => setForm({ ...form, images: form.images.filter((_, j) => j !== i) });
 
   useEffect(() => {
     loadProducts();
@@ -135,7 +125,6 @@ export default function AdminDashboard() {
         status: form.status,
         battery_percentage: form.battery_percentage || null,
         general_condition: form.general_condition || null,
-        slug: form.slug || form.name.toLowerCase().replace(/\s+/g, "-"),
         images: form.images.filter((i) => i.trim()),
         video_url: form.video_url || null,
         specs: form.specs,
@@ -181,10 +170,9 @@ export default function AdminDashboard() {
       description: product.description,
       condition: product.condition,
       status: (product as any).status || "disponivel",
-      battery_percentage: (product as any).battery_percentage,
+      battery_percentage: (product as any).battery_percentage || undefined,
       general_condition: (product as any).general_condition || "",
-      slug: (product as any).slug || "",
-      images: product.images && product.images.length ? product.images : [""],
+      images: product.images && product.images.length ? product.images : [],
       video_url: product.video_url || "",
       specs: product.specs,
       featured: product.featured,
@@ -225,8 +213,7 @@ export default function AdminDashboard() {
       status: "disponivel",
       battery_percentage: undefined,
       general_condition: "",
-      slug: "",
-      images: [""],
+      images: [],
       video_url: "",
       specs: {},
       featured: false,
@@ -386,270 +373,274 @@ export default function AdminDashboard() {
       {activeTab === "produtos" && (
         <>
           {showForm && (
-        <div className="mb-8 rounded-xl border bg-card p-6 space-y-4">
-          <h2 className="font-semibold text-lg">
-            {editing ? "Editar produto" : "Novo produto"}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              placeholder="Nome do produto"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
-            <Select value={form.brand} onValueChange={(v) => setForm({ ...form, brand: v })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione marca" />
-              </SelectTrigger>
-              <SelectContent>
-                {brands.map((b) => (
-                  <SelectItem key={b} value={b}>
-                    {b}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Input
-              type="number"
-              placeholder="Preço"
-              value={form.price || ""}
-              onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-            />
-            <Input
-              type="number"
-              placeholder="Preço original (opcional)"
-              value={form.original_price || ""}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  original_price: Number(e.target.value) || undefined,
-                })
-              }
-            />
-            <Select
-              value={form.condition}
-              onValueChange={(v) => setForm({ ...form, condition: v })}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {CONDITIONS.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {conditionLabel(c)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select
-              value={form.status}
-              onValueChange={(v) => setForm({ ...form, status: v as any })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="disponivel">Disponível</SelectItem>
-                <SelectItem value="vendido">Vendido</SelectItem>
-                <SelectItem value="reservado">Reservado</SelectItem>
-              </SelectContent>
-            </Select>
-            <Input
-              type="number"
-              placeholder="Bateria (%)"
-              min="0"
-              max="100"
-              value={form.battery_percentage || ""}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  battery_percentage: Number(e.target.value) || undefined,
-                })
-              }
-            />
-            <Input
-              placeholder="Estado Geral (ex: Excelente, sem marcas)"
-              value={form.general_condition}
-              onChange={(e) => setForm({ ...form, general_condition: e.target.value })}
-            />
-            <Input
-              placeholder="Slug (auto se vazio)"
-              value={form.slug}
-              onChange={(e) => setForm({ ...form, slug: e.target.value })}
-            />
-          </div>
+            <div className="mb-8 rounded-xl border bg-card p-6 space-y-6">
+              <h2 className="font-semibold text-lg">
+                {editing ? "Editar produto" : "Novo produto"}
+              </h2>
 
-          <div>
-            <label className="text-sm font-medium mb-2 block">Imagens (URLs)</label>
-            <div className="space-y-2">
-              {form.images.map((img, i) => (
-                <div key={i} className="flex gap-2">
+              {/* Básico */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Informações Básicas</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    placeholder="URL da imagem"
-                    value={img}
-                    onChange={(e) => updateImage(i, e.target.value)}
+                    placeholder="Nome do produto"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeImage(i)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <Select value={form.brand} onValueChange={(v) => setForm({ ...form, brand: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione marca" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {brands.map((b) => (
+                        <SelectItem key={b} value={b}>
+                          {b}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={addImage}
-              >
-                <Plus className="h-4 w-4 mr-1" /> Adicionar imagem
-              </Button>
+              </div>
+
+              {/* Preços */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Preços</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    type="number"
+                    placeholder="Preço (R$)"
+                    value={form.price || ""}
+                    onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Preço original (opcional)"
+                    value={form.original_price || ""}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        original_price: Number(e.target.value) || undefined,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Status e Condição */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Status e Condição</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as any })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="disponivel">Disponível</SelectItem>
+                      <SelectItem value="vendido">Vendido</SelectItem>
+                      <SelectItem value="reservado">Reservado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={form.condition} onValueChange={(v) => setForm({ ...form, condition: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Condição" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CONDITIONS.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {conditionLabel(c)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    type="number"
+                    placeholder="Bateria (%)"
+                    min="0"
+                    max="100"
+                    value={form.battery_percentage || ""}
+                    onChange={(e) => setForm({ ...form, battery_percentage: Number(e.target.value) || undefined })}
+                  />
+                </div>
+                <Textarea
+                  placeholder="Estado geral do produto (ex: Sem arranhões, Vidro levemente marcado)"
+                  value={form.general_condition}
+                  onChange={(e) => setForm({ ...form, general_condition: e.target.value })}
+                  className="min-h-16"
+                />
+              </div>
+
+              {/* Mídia */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Imagens e Vídeo</h3>
+                <ImageUpload
+                  onImagesUrls={(urls) => setForm({ ...form, images: urls })}
+                  onVideoUrl={(url) => setForm({ ...form, video_url: url })}
+                  currentImages={form.images}
+                  currentVideo={form.video_url}
+                />
+              </div>
+
+              {/* Descrição */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Descrição</h3>
+                <Textarea
+                  placeholder="Descrição detalhada do produto"
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  className="min-h-24"
+                />
+              </div>
+
+              {/* Especificações */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Especificações</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {["RAM", "CHIP", "TELA", "BATERIA", "CÂMERA", "ARMAZENAMENTO"].map((key) => (
+                    <Input
+                      key={key}
+                      placeholder={key}
+                      value={form.specs[key] || ""}
+                      onChange={(e) => setForm({ ...form, specs: { ...form.specs, [key]: e.target.value } })}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Flags */}
+              <div className="space-y-2">
+                <h3 className="font-medium text-sm text-muted-foreground">Opções</h3>
+                <div className="flex flex-wrap gap-4">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.featured}
+                      onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+                    />
+                    Destaque
+                  </label>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.promotion}
+                      onChange={(e) => setForm({ ...form, promotion: e.target.checked })}
+                    />
+                    Promoção
+                  </label>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.is_on_request}
+                      onChange={(e) => setForm({ ...form, is_on_request: e.target.checked })}
+                    />
+                    Por Pedido (até 3 dias úteis)
+                  </label>
+                </div>
+              </div>
+
+              {/* Botões */}
+              <div className="flex gap-2 pt-4">
+                <Button onClick={handleSave} disabled={isSaving}>
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                      Salvando...
+                    </>
+                  ) : editing ? (
+                    "Salvar Alterações"
+                  ) : (
+                    "Adicionar Produto"
+                  )}
+                </Button>
+                <Button variant="outline" onClick={resetForm}>
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Product list */}
+          <div className="rounded-xl border bg-card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="border-b bg-secondary">
+                  <tr>
+                    <th className="text-left p-3 font-medium">Produto</th>
+                    <th className="text-left p-3 font-medium hidden md:table-cell">
+                      Marca
+                    </th>
+                    <th className="text-left p-3 font-medium">Preço</th>
+                    <th className="text-left p-3 font-medium hidden md:table-cell">
+                      Condição
+                    </th>
+                    <th className="text-left p-3 font-medium hidden md:table-cell">
+                      Status
+                    </th>
+                    <th className="text-left p-3 font-medium hidden md:table-cell">
+                      Views
+                    </th>
+                    <th className="text-right p-3 font-medium">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="p-8 text-center text-muted-foreground">
+                        Nenhum produto cadastrado
+                      </td>
+                    </tr>
+                  ) : (
+                    products.map((p) => (
+                      <tr
+                        key={p.id}
+                        className="border-b last:border-0 hover:bg-secondary/50"
+                      >
+                        <td className="p-3 font-medium">{p.name}</td>
+                        <td className="p-3 hidden md:table-cell text-muted-foreground">
+                          {p.brand}
+                        </td>
+                        <td className="p-3">
+                          R$ {p.price.toLocaleString("pt-BR")}
+                        </td>
+                        <td className="p-3 hidden md:table-cell">
+                          <Badge variant="outline">{conditionLabel(p.condition)}</Badge>
+                        </td>
+                        <td className="p-3 hidden md:table-cell">
+                          <Badge variant={
+                            (p as any).status === "vendido" ? "destructive" :
+                            (p as any).status === "reservado" ? "secondary" : "default"
+                          }>
+                            {(p as any).status === "vendido" ? "Vendido" :
+                             (p as any).status === "reservado" ? "Reservado" : "Disponível"}
+                          </Badge>
+                        </td>
+                        <td className="p-3 hidden md:table-cell text-muted-foreground">
+                          {p.views}
+                        </td>
+                        <td className="p-3 text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleEdit(p)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleDelete(p.id)}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
-
-          <Input
-            placeholder="URL do vídeo (YouTube, Vimeo, etc) - Opcional"
-            value={form.video_url}
-            onChange={(e) => setForm({ ...form, video_url: e.target.value })}
-          />
-
-          <Textarea
-            placeholder="Descrição"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            rows={4}
-          />
-          <div className="flex flex-wrap gap-4">
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-              />
-              Destaque
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.promotion}
-                onChange={(e) => setForm({ ...form, promotion: e.target.checked })}
-              />
-              Promoção
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.is_on_request}
-                onChange={(e) => setForm({ ...form, is_on_request: e.target.checked })}
-              />
-              Por Pedido (até 3 dias úteis)
-            </label>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={handleSave} disabled={isSaving}>
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                  Salvando...
-                </>
-              ) : editing ? (
-                "Salvar"
-              ) : (
-                "Adicionar"
-              )}
-            </Button>
-            <Button variant="outline" onClick={resetForm}>
-              Cancelar
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Product list */}
-      <div className="rounded-xl border bg-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b bg-secondary">
-              <tr>
-                <th className="text-left p-3 font-medium">Produto</th>
-                <th className="text-left p-3 font-medium hidden md:table-cell">
-                  Marca
-                </th>
-                <th className="text-left p-3 font-medium">Preço</th>
-                <th className="text-left p-3 font-medium hidden md:table-cell">
-                  Condição
-                </th>
-                <th className="text-left p-3 font-medium hidden md:table-cell">
-                  Status
-                </th>
-                <th className="text-left p-3 font-medium hidden md:table-cell">
-                  Views
-                </th>
-                <th className="text-right p-3 font-medium">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-muted-foreground">
-                    Nenhum produto cadastrado
-                  </td>
-                </tr>
-              ) : (
-                products.map((p) => (
-                  <tr
-                    key={p.id}
-                    className="border-b last:border-0 hover:bg-secondary/50"
-                  >
-                    <td className="p-3 font-medium">{p.name}</td>
-                    <td className="p-3 hidden md:table-cell text-muted-foreground">
-                      {p.brand}
-                    </td>
-                    <td className="p-3">
-                      R$ {p.price.toLocaleString("pt-BR")}
-                    </td>
-                    <td className="p-3 hidden md:table-cell">
-                      <Badge variant="outline">{conditionLabel(p.condition)}</Badge>
-                    </td>
-                    <td className="p-3 hidden md:table-cell">
-                      <Badge variant={
-                        (p as any).status === "vendido" ? "destructive" :
-                        (p as any).status === "reservado" ? "secondary" : "default"
-                      }>
-                        {(p as any).status === "vendido" ? "Vendido" :
-                         (p as any).status === "reservado" ? "Reservado" : "Disponível"}
-                      </Badge>
-                    </td>
-                    <td className="p-3 hidden md:table-cell text-muted-foreground">
-                      {p.views}
-                    </td>
-                    <td className="p-3 text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => handleEdit(p)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => handleDelete(p.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
         </>
       )}
     </div>

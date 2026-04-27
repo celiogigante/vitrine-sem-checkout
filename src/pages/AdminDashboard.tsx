@@ -14,7 +14,7 @@ import AdminMenuManager from "@/components/AdminMenuManager";
 import AdminHeroConfig from "@/components/AdminHeroConfig";
 import AdminProductHighlights from "@/components/AdminProductHighlights";
 import AdminBrandsManager from "@/components/AdminBrandsManager";
-import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag, Database } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, Loader2, BarChart3, Package, Menu, Image, Star, Tag, Database, Power } from "lucide-react";
 import MigrationHelper from "@/components/MigrationHelper";
 import { useToast } from "@/hooks/use-toast";
 
@@ -178,6 +178,27 @@ export default function AdminDashboard() {
       console.error("Error deleting product:", err);
       toast({
         title: "Erro ao deletar produto",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleStatus = async (product: Product) => {
+    const newStatus = product.status === "disponivel" ? "vendido" : "disponivel";
+    try {
+      await updateProduct(product.id, { status: newStatus });
+      setProducts(
+        products.map((p) =>
+          p.id === product.id ? { ...p, status: newStatus } : p
+        )
+      );
+      toast({
+        title: newStatus === "vendido" ? "Marcado como Vendido" : "Marcado como Disponível",
+      });
+    } catch (err) {
+      console.error("Error toggling status:", err);
+      toast({
+        title: "Erro ao atualizar status",
         variant: "destructive",
       });
     }
@@ -617,6 +638,15 @@ export default function AdminDashboard() {
                         </td>
                         <td className="p-3 text-right">
                           <div className="flex justify-end gap-1">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              title={p.status === "disponivel" ? "Marcar como Vendido" : "Marcar como Disponível"}
+                              onClick={() => handleToggleStatus(p)}
+                              className={p.status === "vendido" ? "text-destructive" : "text-green-600"}
+                            >
+                              <Power className="h-4 w-4" />
+                            </Button>
                             <Button
                               size="icon"
                               variant="ghost"

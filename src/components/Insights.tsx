@@ -347,15 +347,15 @@ export function Insights() {
         {data.conditionDistribution.length > 0 && (
           <div className="rounded-lg border bg-card p-4">
             <h3 className="font-semibold mb-4">Distribuição por Condição</h3>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie
                   data={data.conditionDistribution}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
+                  labelLine={true}
                   label={({ name, value }) => `${name}: ${value}`}
-                  outerRadius={80}
+                  outerRadius={70}
                   fill="#8884d8"
                   dataKey="value"
                 >

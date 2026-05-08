@@ -90,9 +90,20 @@ export default function ModelSelector({ value, onSelect, brand }: ModelSelectorP
         setSearch("");
         toast({ title: "Modelo cadastrado com sucesso!" });
       }
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      console.error("Error creating model:", errorMsg);
+    } catch (err: any) {
+      let errorMsg = "Erro desconhecido";
+
+      if (err?.message) {
+        errorMsg = err.message;
+      } else if (err?.details) {
+        errorMsg = err.details;
+      } else if (err instanceof Error) {
+        errorMsg = err.message;
+      } else if (typeof err === 'string') {
+        errorMsg = err;
+      }
+
+      console.error("Error creating model:", err);
       toast({ title: `Erro ao cadastrar modelo: ${errorMsg}`, variant: "destructive" });
     } finally {
       setIsLoading(false);

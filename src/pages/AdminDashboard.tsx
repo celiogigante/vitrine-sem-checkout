@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/authContext";
 import { supabase } from "@/lib/supabase";
-import { getProducts, updateProduct, deleteProduct, addProduct, BRANDS, getModels, getModelsByBrand, type Product, type Model } from "@/lib/products";
+import { getProducts, updateProduct, deleteProduct, addProduct, BRANDS, getModels, type Product, type Model } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

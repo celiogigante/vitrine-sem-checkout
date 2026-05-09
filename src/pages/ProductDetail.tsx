@@ -26,6 +26,7 @@ const ProductDetail = () => {
 
   const handleWhatsAppClick = () => {
     if (product) {
+      console.log("WhatsApp click:", { productId: product.id, modelId: product.modelId });
       recordProductClick(product.id, { type: "whatsapp" });
       recordWhatsAppClick(product.id, product.modelId);
     }

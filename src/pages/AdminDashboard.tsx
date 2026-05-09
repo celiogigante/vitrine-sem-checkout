@@ -580,13 +580,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Variações de Produtos */}
-              {editing && (
-                <div className="pt-4 border-t">
-                  <AdminVariantManager productId={editing} />
-                </div>
-              )}
-
               {/* Flags */}
               <div className="space-y-2">
                 <h3 className="font-medium text-sm text-muted-foreground">Opções</h3>

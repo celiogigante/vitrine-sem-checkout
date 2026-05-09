@@ -213,7 +213,7 @@ const ProductDetail = () => {
             </p>
           </div>
 
-          {!sold && selectedVariant?.stock_quantity > 0 ? (
+          {!sold && (variants.length === 0 || selectedVariant?.stock_quantity === undefined || selectedVariant?.stock_quantity > 0) ? (
             <>
               <Button
                 size="lg"

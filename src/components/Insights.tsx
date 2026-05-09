@@ -365,9 +365,9 @@ export function Insights() {
         </div>
 
         {/* WhatsApp Clicks by Model */}
-        <div className="rounded-lg border bg-card p-4">
-          <h3 className="font-semibold mb-4">Cliques no WhatsApp por Modelo</h3>
-          {data.whatsappClicksByModel.length > 0 ? (
+        {data.whatsappClicksByModel && data.whatsappClicksByModel.length > 0 && (
+          <div className="rounded-lg border bg-card p-4">
+            <h3 className="font-semibold mb-4">Cliques no WhatsApp por Modelo</h3>
             <div className="space-y-2">
               {data.whatsappClicksByModel.map((model, index) => (
                 <div key={model.modelId} className="flex items-center justify-between text-sm p-2 border-b last:border-b-0">
@@ -379,10 +379,8 @@ export function Insights() {
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">Nenhum modelo com cliques ainda</p>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Condition Distribution */}
         {data.conditionDistribution.length > 0 && (

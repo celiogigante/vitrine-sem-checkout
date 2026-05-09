@@ -91,8 +91,13 @@ export default function ModelSelector({ value, onSelect, brand }: ModelSelectorP
         toast({ title: "Modelo cadastrado com sucesso!" });
       }
     } catch (err: any) {
-      console.log("Full error object:", JSON.stringify(err, null, 2));
+      console.log("=== DETAILED ERROR DEBUG ===");
+      console.log("Raw error:", err);
+      console.log("Error type:", typeof err);
+      console.log("Error constructor:", err?.constructor?.name);
+      console.log("Full stringify:", JSON.stringify(err, null, 2));
       console.log("Error keys:", Object.keys(err || {}));
+      console.log("Error entries:", Object.entries(err || {}));
 
       let errorMsg = "Erro desconhecido";
 
@@ -104,9 +109,13 @@ export default function ModelSelector({ value, onSelect, brand }: ModelSelectorP
         errorMsg = err.details;
       } else if (err?.code) {
         errorMsg = `Erro ${err.code}`;
+      } else if (err?.error?.message) {
+        errorMsg = err.error.message;
+      } else if (err?.data?.message) {
+        errorMsg = err.data.message;
       }
 
-      console.error("Error creating model:", err);
+      console.error("Error creating model:", errorMsg);
       toast({ title: `Erro ao cadastrar modelo: ${errorMsg}`, variant: "destructive" });
     } finally {
       setIsLoading(false);

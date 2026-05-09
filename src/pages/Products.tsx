@@ -27,6 +27,12 @@ const Products = () => {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+    setBrand(searchParams.get("brand") || "all");
+    setCurrentPage(1);
+  }, [searchParams]);
+
   const loadProducts = async () => {
     try {
       const productList = await getProducts();
